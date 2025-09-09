@@ -379,6 +379,9 @@
         .control-group {
             margin-bottom: 1rem;
         }
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
         .control-group label {
             display: block;
             margin-bottom: 0.5rem;
@@ -393,6 +396,7 @@
             border: none;
             padding: 0;
             background: transparent;
+            cursor: none;
         }
 
         /*------------------------------------
@@ -580,6 +584,9 @@
                 <label for="particleSpeed">Animation Speed</label>
                 <input type="range" id="particleSpeed" min="0" max="0.002" step="0.0001" value="0.0005">
             </div>
+            <div class="control-group">
+                <button id="randomizeColorBtn" class="btn btn-secondary interactive" style="width: 100%; margin-top: 0.5rem; padding: 0.6rem 1rem;">Randomize Color</button>
+            </div>
         </div>
     </div>
     
@@ -757,7 +764,7 @@
                         trigger: projectsWrapper,
                         start: "top top",
                         end: () => "+=" + (projectsGrid.scrollWidth - document.documentElement.clientWidth),
-                        scrub: true,
+                        scrub: 1,
                         pin: true,
                         invalidateOnRefresh: true,
                         anticipatePin: 1
@@ -772,8 +779,9 @@
             toggleButton.addEventListener('click', () => {
                 controlsContainer.classList.toggle('open');
             });
-
-            document.getElementById('particleColor').addEventListener('input', (e) => {
+            
+            const colorPicker = document.getElementById('particleColor');
+            colorPicker.addEventListener('input', (e) => {
                 particles.material.color.set(e.target.value);
             });
             document.getElementById('particleSize').addEventListener('input', (e) => {
@@ -781,6 +789,12 @@
             });
             document.getElementById('particleSpeed').addEventListener('input', (e) => {
                 particleSpeed = parseFloat(e.target.value);
+            });
+            
+            document.getElementById('randomizeColorBtn').addEventListener('click', () => {
+                const randomColor = new THREE.Color(Math.random() * 0xffffff);
+                particles.material.color.set(randomColor);
+                colorPicker.value = '#' + randomColor.getHexString();
             });
         });
     </script>
