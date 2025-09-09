@@ -40,6 +40,29 @@
             cursor: none;
         }
         
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0) 0px,
+                rgba(0, 0, 0, 0) 2px,
+                rgba(0, 0, 0, 0.05) 3px
+            );
+            z-index: 100;
+            pointer-events: none;
+            animation: scanline 8s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0% { background-position-y: 0px; }
+            100% { background-position-y: 200px; }
+        }
+
         body.matrix-mode #page-canvas {
              filter: hue-rotate(100deg) brightness(0.8);
         }
@@ -225,8 +248,52 @@
             line-height: 1.1;
             margin-bottom: 1rem;
             clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+            position: relative;
         }
         .line { display: block; }
+        
+        .glitch {
+            animation: glitch-skew 1s infinite linear alternate-reverse;
+        }
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--primary-color);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 var(--secondary-color), 2px 2px var(--primary-color);
+            clip: rect(85px, 450px, 90px, 0);
+            animation: glitch-anim-2 5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(42px, 9999px, 44px, 0); transform: skew(0.3deg); }
+            /* ... more steps ... */
+            100% { clip: rect(63px, 9999px, 72px, 0); transform: skew(0.8deg); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(7px, 9999px, 99px, 0); transform: skew(0.2deg); }
+            /* ... more steps ... */
+            100% { clip: rect(42px, 9999px, 95px, 0); transform: skew(0.6deg); }
+        }
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            10% { transform: skew(1deg); }
+            /* ... more steps ... */
+            100% { transform: skew(0deg); }
+        }
+
         .hero-content p {
             font-size: clamp(1rem, 4vw, 1.5rem);
             color: var(--secondary-color);
@@ -596,7 +663,7 @@
         <main>
             <section id="hero" class="hero">
                 <div class="hero-content container">
-                    <h1>
+                    <h1 class="glitch" data-text="G Sekhar Reddy">
                         <span class="line">G Sekhar Reddy</span>
                     </h1>
                     <p>Computer Science Student | Engineer | Game Developer</p>
@@ -956,6 +1023,8 @@
             const achievementSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 } }).toDestination();
             const levelUpSound = new Tone.Synth({ oscillator: { type: 'fatsawtooth' }, envelope: { attack: 0.05, decay: 0.5, sustain: 0.1, release: 0.5 } }).toDestination();
             const orbSound = new Tone.Synth({ oscillator: { type: 'triangle8' }, envelope: { attack: 0.01, decay: 0.8, sustain: 0.1, release: 0.2 } }).toDestination();
+            const godModeSound = new Tone.MembraneSynth().toDestination();
+
 
             function playSound(sound, note, duration = '8n') {
                 if (!isSoundEnabled) return;
@@ -980,7 +1049,7 @@
 
             function addXP(amount) {
                 currentXP += amount;
-                if (currentXP >= xpToNextLevel) {
+                while (currentXP >= xpToNextLevel) {
                     levelUp();
                 }
                 updateXpBar();
@@ -1007,6 +1076,7 @@
                 'skills': { title: 'Skill Tree Unlocked', unlocked: false, xp: 25 },
                 'projects': { title: 'Quest Log Reviewed', unlocked: false, xp: 25 },
                 'contact': { title: 'Summon Protocol Initiated', unlocked: false, xp: 25 },
+                'godmode': { title: 'God Mode Activated!', unlocked: false, xp: 500 }
             };
             const achievementsDisplay = document.getElementById('achievements-display');
 
@@ -1075,21 +1145,28 @@
                 });
             });
 
-            // Konami Code
-            const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-            let konamiIndex = 0;
+            // IDKFA Easter Egg
+            const idkfaCode = ['i', 'd', 'k', 'f', 'a'];
+            let idkfaIndex = 0;
             document.addEventListener('keydown', (e) => {
-                if (e.key === konamiCode[konamiIndex]) {
-                    konamiIndex++;
-                    if (konamiIndex === konamiCode.length) {
-                        konamiIndex = 0;
-                        document.body.classList.toggle('matrix-mode');
-                        const matrixAchievement = { title: 'Easter Egg Found: Matrix Mode!', unlocked: false };
-                        showAchievement(matrixAchievement);
-                        addXP(100);
+                if (e.key.toLowerCase() === idkfaCode[idkfaIndex]) {
+                    idkfaIndex++;
+                    if (idkfaIndex === idkfaCode.length) {
+                        idkfaIndex = 0;
+                        if (!achievements['godmode'].unlocked) {
+                            playSound(godModeSound, "C2", "1n");
+                            showAchievement(achievements['godmode']);
+                            addXP(achievements['godmode'].xp);
+                            // Unlock all other achievements
+                            Object.keys(achievements).forEach(key => {
+                                if (!achievements[key].unlocked) {
+                                    showAchievement(achievements[key]);
+                                }
+                            });
+                        }
                     }
                 } else {
-                    konamiIndex = 0;
+                    idkfaIndex = 0;
                 }
             });
 
@@ -1158,4 +1235,5 @@
     </script>
 </body>
 </html>
+
 
