@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Immersive Portfolio | Your Name</title>
+    <title>Hyper-Interactive Portfolio | Your Name</title>
+    
     <style>
-        /*-------------------------
-          1. VARIABLES & RESET
-        -------------------------*/
+        /*------------------------------------
+          1. CONFIG: VARIABLES & GLOBAL RESET
+        ------------------------------------*/
         :root {
-            --bg-color: #F7F8FC;
+            --bg-dark: #0d0d1a;
+            --bg-light: #F7F8FC;
             --primary-color: #FFA500;
             --secondary-color: #1E90FF;
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --text-color: #333;
-            --light-text-color: #f0f0f0;
-            --border-color: rgba(255, 255, 255, 0.2);
-            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            --font-family: 'Poppins', sans-serif;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --text-light: #e0e0e0;
+            --text-dark: #333;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --font-main: 'Poppins', sans-serif;
         }
 
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -31,10 +32,11 @@
         }
 
         body {
-            font-family: var(--font-family);
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: var(--font-main);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
             overflow-x: hidden;
+            cursor: none; /* Hide default cursor */
         }
 
         .container {
@@ -42,67 +44,79 @@
             width: 90%;
             margin: 0 auto;
         }
-
+        
         section {
-            padding: 6rem 0;
-            overflow: hidden;
+            padding: 7rem 0;
+            position: relative;
         }
 
         .section-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-size: clamp(2.5rem, 6vw, 4rem);
             text-align: center;
             margin-bottom: 4rem;
             font-weight: 700;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            border-radius: 2px;
-        }
-
-        /* Pre-animation hidden state */
-        .reveal {
-            opacity: 0;
+            color: var(--text-light);
             transform: translateY(50px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            opacity: 0;
+            transition: transform 0.8s ease, opacity 0.8s ease;
         }
-
-        .reveal.visible {
-            opacity: 1;
+        
+        .section-title.visible {
             transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /*------------------------------------
+          2. CUSTOM CURSOR
+        ------------------------------------*/
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
         }
 
-        /*-------------------------
-          2. HEADER & NAVBAR
-        -------------------------*/
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary-color);
+            transition: transform 0.1s ease-out;
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--primary-color);
+            transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .cursor-outline.hover {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--secondary-color);
+        }
+
+        /*------------------------------------
+          3. HEADER & NAVBAR
+        ------------------------------------*/
         .main-header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 1000;
-            padding: 1rem 0;
-            transition: all 0.4s ease;
+            padding: 1.5rem 0;
+            transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
         }
 
         .main-header.scrolled {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: var(--shadow);
+            background-color: rgba(13, 13, 26, 0.5);
+            backdrop-filter: blur(15px);
         }
-        
+
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -124,36 +138,14 @@
 
         .nav-links a {
             text-decoration: none;
-            color: var(--text-color);
+            color: var(--text-light);
             font-weight: 500;
-            position: relative;
-            padding-bottom: 5px;
-            transition: color 0.3s;
+            transition: color 0.3s ease;
         }
 
-        .main-header.scrolled .nav-links a {
-            color: var(--text-color);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary-color);
-            transition: width 0.4s ease;
-        }
-
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            width: 100%;
-        }
-
-        /*-------------------------
-          3. HERO SECTION
-        -------------------------*/
+        /*------------------------------------
+          4. HERO SECTION & THREE.JS CANVAS
+        ------------------------------------*/
         .hero {
             height: 100vh;
             display: flex;
@@ -161,230 +153,200 @@
             justify-content: center;
             text-align: center;
             position: relative;
-            color: var(--light-text-color);
-            padding-top: 60px; /* Offset for navbar */
-        }
-        
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
-            z-index: -2;
         }
 
-        .hero-overlay {
+        #hero-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(20, 20, 40, 0.7);
             z-index: -1;
         }
 
         .hero-content h1 {
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            animation: fadeInDown 1s ease-out;
-            margin-bottom: 1rem;
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: slide-in 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        .hero-content p {
-            font-size: clamp(1rem, 4vw, 1.5rem);
-            color: var(--primary-color);
-            animation: fadeInUp 1s ease-out 0.5s;
-            animation-fill-mode: backwards;
-        }
-        
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        /*-------------------------
-          4. ABOUT SECTION
-        -------------------------*/
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 4rem;
-            align-items: center;
-        }
-        
-        .about-image {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            justify-self: center;
+        @keyframes slide-in {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
         }
 
-        .about-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 5px solid var(--secondary-color);
-            padding: 5px;
-        }
+        /*------------------------------------
+          5. ABOUT SECTION
+        ------------------------------------*/
+        #about { background-color: var(--bg-light); color: var(--text-dark); }
+        #about .section-title { color: var(--text-dark); }
 
-        .about-text h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .about-text p {
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 1.2rem;
             line-height: 1.8;
-            margin-bottom: 1.5rem;
         }
-
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #fff;
-            font-weight: 500;
-            transition: transform 0.3s ease;
+        
+        .about-content p {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
-
-        .btn:hover {
-            transform: translateY(-3px);
+        
+        .about-content p.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
-
-        .btn-primary { background-color: var(--primary-color); }
-        .btn-secondary { background-color: var(--secondary-color); }
-
-        /*-------------------------
-          5. PROJECTS SECTION
-        -------------------------*/
-        #projects {
-            background-color: #eef2f9;
+        
+        /*------------------------------------
+          6. PROJECTS (HORIZONTAL SCROLL)
+        ------------------------------------*/
+        .projects-wrapper {
+            height: 100vh;
+            position: relative;
+        }
+        
+        .projects-sticky-container {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
         }
         
         .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            padding: 0 5vw;
+            width: max-content; /* Critical for horizontal scroll */
         }
 
         .project-card {
+            width: 400px;
+            height: 550px;
+            flex-shrink: 0;
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 15px;
+            border-radius: 20px;
             border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            color: var(--text-color);
-            transition: transform 0.1s ease;
-            transform-style: preserve-3d;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            transition: transform 0.5s ease;
         }
         
-        .project-card::before {
-            content: '';
+        .project-card:hover {
+            transform: translateY(-15px);
+        }
+
+        .project-card .bg-image {
             position: absolute;
             top: 0;
-            left: -100%;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
-            opacity: 0.1;
-            transition: left 0.5s ease;
+            object-fit: cover;
+            z-index: -1;
+            filter: grayscale(80%) brightness(0.5);
+            transition: filter 0.5s ease, transform 0.5s ease;
         }
         
-        .project-card:hover::before {
-            left: 100%;
+        .project-card:hover .bg-image {
+            filter: grayscale(0%) brightness(0.8);
+            transform: scale(1.1);
         }
-
+        
         .project-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--secondary-color);
-        }
-
-        .project-links {
-            margin-top: 1.5rem;
-            display: flex;
-            gap: 1rem;
-        }
-
-        /*-------------------------
-          6. CONTACT SECTION
-        -------------------------*/
-        .contact-form {
-            max-width: 700px;
-            margin: 0 auto;
-            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
         }
         
-        .form-group {
-            position: relative;
-            margin-bottom: 2.5rem;
+        .project-card p {
+            line-height: 1.6;
         }
 
-        .form-input {
+        /*------------------------------------
+          7. PROJECT MODAL
+        ------------------------------------*/
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 1rem;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-family: var(--font-family);
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .form-label {
-            position: absolute;
-            left: 1rem;
-            top: 1rem;
-            color: #999;
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus,
-        .form-input:not(:placeholder-shown) {
-            border-color: var(--secondary-color);
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
         }
         
-        .form-input:focus + .form-label,
-        .form-input:not(:placeholder-shown) + .form-label {
-            top: -0.75rem;
-            left: 0.75rem;
-            font-size: 0.8rem;
-            color: var(--secondary-color);
-            background-color: var(--bg-color);
-            padding: 0 0.25rem;
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 3rem;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.5s ease;
         }
 
-        /*-------------------------
-          7. FOOTER
-        -------------------------*/
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: none;
+        }
+        
+        /*------------------------------------
+          8. FOOTER
+        ------------------------------------*/
         footer {
             text-align: center;
-            padding: 2rem 0;
-            background-color: #333;
-            color: var(--light-text-color);
+            padding: 3rem 0;
+            background-color: var(--bg-dark);
+            border-top: 1px solid var(--border-color);
         }
-        
-        /*-------------------------
-          8. RESPONSIVENESS
-        -------------------------*/
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none; /* Simplification for this example */
-            }
-            .about-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .about-image {
-                margin-bottom: 2rem;
-            }
+
+        /*------------------------------------
+          9. RESPONSIVENESS
+        ------------------------------------*/
+        @media(max-width: 768px) {
+            .nav-links { display: none; }
+            .projects-wrapper { height: auto; }
+            .projects-sticky-container { position: static; height: auto; overflow: visible; }
+            .projects-grid { flex-direction: column; width: 100%; padding: 0; }
+            .project-card { width: 100%; height: 500px; }
         }
+
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -392,168 +354,211 @@
 </head>
 <body>
 
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
     <header class="main-header" id="main-header">
         <nav class="navbar container">
-            <a href="#" class="nav-logo">[Your Name]</a>
+            <a href="#" class="nav-logo interactive">[Your Name]</a>
             <ul class="nav-links">
-                <li><a href="#hero" class="active">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#hero" class="interactive">Home</a></li>
+                <li><a href="#about" class="interactive">About</a></li>
+                <li><a href="#projects" class="interactive">Projects</a></li>
             </ul>
         </nav>
     </header>
 
     <section id="hero" class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-overlay"></div>
+        <canvas id="hero-canvas"></canvas>
         <div class="hero-content container">
-            <h1>Creative Developer & Designer</h1>
-            <p>Crafting immersive digital experiences from scratch.</p>
+            <h1>INSANELY COMPLEX</h1>
         </div>
     </section>
 
-    <section id="about" class="about">
+    <section id="about">
         <div class="container">
-            <h2 class="section-title reveal">Who I Am</h2>
-            <div class="about-grid">
-                <div class="about-image reveal">
-                    <img src="https://via.placeholder.com/300" alt="Your Portrait">
-                </div>
-                <div class="about-text reveal">
-                    <h3>Turning Vision Into Reality With Code And Design.</h3>
-                    <p>
-                        I'm a passionate developer based in [Your City], with a knack for creating beautiful, functional, and user-centered digital experiences. From complex backend logic to pixel-perfect frontend design, I love every aspect of bringing an idea to life.
-                    </p>
-                    <a href="#contact" class="btn btn-primary">Let's Connect</a>
-                </div>
+            <h2 class="section-title">A Fusion of Code & Creativity.</h2>
+            <div class="about-content">
+                <p>This is not just a portfolio; it's a statement. Built from the ground up with a suite of advanced web technologies to create a truly immersive and memorable user experience. Every interaction, every animation is meticulously crafted to push the boundaries of what a single HTML file can do.</p>
             </div>
         </div>
     </section>
 
     <section id="projects" class="projects">
-        <div class="container">
-            <h2 class="section-title reveal">My Creations</h2>
-            <div class="projects-grid">
-                <div class="project-card reveal" style="transition-delay: 0.1s;">
-                    <h3>CodeShift Android App</h3>
-                    <p>An innovative tool for developers on the go. Built with Kotlin, Jetpack Compose, and Firebase, this app provides seamless code conversion and explanation, boosting productivity.</p>
-                    <div class="project-links">
-                        <a href="#" class="btn btn-secondary">GitHub</a>
-                        <a href="#" class="btn btn-primary">Live Demo</a>
+        <div class="projects-wrapper">
+            <div class="projects-sticky-container">
+                <h2 class="section-title">Featured Work</h2>
+                <div class="projects-grid">
+                    <div class="project-card interactive" data-project-id="1">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop" class="bg-image" alt="Code">
+                        <h3>Project One</h3>
+                        <p>A deep dive into advanced front-end development.</p>
                     </div>
-                </div>
-                <div class="project-card reveal" style="transition-delay: 0.2s;">
-                    <h3>E-commerce Platform</h3>
-                    <p>A full-stack e-commerce solution with features like product management, user authentication, and a payment gateway. Built with the MERN stack (MongoDB, Express, React, Node.js).</p>
-                    <div class="project-links">
-                        <a href="#" class="btn btn-secondary">GitHub</a>
-                        <a href="#" class="btn btn-primary">Live Demo</a>
+                    <div class="project-card interactive" data-project-id="2">
+                        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop" class="bg-image" alt="Laptop">
+                        <h3>Project Two</h3>
+                        <p>Full-stack application with a focus on performance.</p>
                     </div>
-                </div>
-                <div class="project-card reveal" style="transition-delay: 0.3s;">
-                    <h3>Data Visualization Dashboard</h3>
-                    <p>An interactive dashboard for visualizing complex datasets using D3.js and React. Features dynamic charts, filters, and real-time data updates for insightful analysis.</p>
-                    <div class="project-links">
-                        <a href="#" class="btn btn-secondary">GitHub</a>
-                        <a href="#" class="btn btn-primary">Live Demo</a>
+                    <div class="project-card interactive" data-project-id="3">
+                        <img src="https://images.unsplash.com/photo-1618788372246-79faff0c3742?q=80&w=1964&auto=format&fit=crop" class="bg-image" alt="UI Design">
+                        <h3>Project Three</h3>
+                        <p>UI/UX design and implementation with modern frameworks.</p>
+                    </div>
+                    <div class="project-card interactive" data-project-id="4">
+                        <img src="https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=2106&auto=format&fit=crop" class="bg-image" alt="Data">
+                        <h3>Project Four</h3>
+                        <p>Data visualization and interactive dashboards.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title reveal">Get In Touch</h2>
-            <form action="#" class="contact-form reveal">
-                <div class="form-group">
-                    <input type="text" id="name" class="form-input" placeholder=" ">
-                    <label for="name" class="form-label">Your Name</label>
-                </div>
-                <div class="form-group">
-                    <input type="email" id="email" class="form-input" placeholder=" ">
-                    <label for="email" class="form-label">Your Email</label>
-                </div>
-                <div class="form-group">
-                    <textarea id="message" class="form-input" rows="5" placeholder=" "></textarea>
-                    <label for="message" class="form-label">Your Message</label>
-                </div>
-                <button type="submit" class="btn btn-primary">Send Message</button>
-            </form>
-        </div>
-    </section>
-
     <footer>
-        <p>&copy; 2025 [Your Name]. All rights reserved.</p>
+        <div class="container">
+            <p>&copy; 2025 [Your Name]. This is an experimental design.</p>
+        </div>
     </footer>
 
+    <div class="modal-overlay" id="project-modal">
+        <div class="modal-content">
+            <button class="modal-close interactive">&times;</button>
+            <h2 id="modal-title">Project Title</h2>
+            <p id="modal-description">Detailed project description goes here...</p>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script defer>
-        document.addEventListener('DOMContentLoaded', function() {
-            const header = document.getElementById('main-header');
-            const navLinks = document.querySelectorAll('.nav-links a');
-            const sections = document.querySelectorAll('section');
-            const projectCards = document.querySelectorAll('.project-card');
-            const revealElements = document.querySelectorAll('.reveal');
+        document.addEventListener('DOMContentLoaded', () => {
 
-            // 1. Sticky Header on Scroll
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-            });
+            // --- DATA FOR PROJECTS ---
+            const projectData = {
+                1: { title: "Project One", description: "This project explores advanced CSS techniques like Houdini, complex grid layouts, and performance-optimized animations. The goal was to create a visually stunning yet lightweight experience." },
+                2: { title: "Project Two", description: "A full-stack application built with Node.js, Express, and a PostgreSQL database. It features real-time data updates with WebSockets and secure user authentication using JWT." },
+                3: { title: "Project Three", description: "Focused on UI/UX, this project involved creating a design system from scratch in Figma and implementing it with React and Storybook. It emphasizes accessibility and component-based architecture." },
+                4: { title: "Project Four", description: "An interactive dashboard for complex datasets. Using D3.js, it allows users to filter, sort, and explore data through dynamic charts and graphs, providing actionable insights." }
+            };
 
-            // 2. Active Nav Link on Scroll
-            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.6 };
-            const sectionObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.getAttribute('id');
-                        navLinks.forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('href') === `#${id}`) {
-                                link.classList.add('active');
-                            }
-                        });
-                    }
-                });
-            }, observerOptions);
+            // --- 1. CUSTOM CURSOR LOGIC ---
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+            const interactiveElements = document.querySelectorAll('.interactive');
 
-            sections.forEach(section => {
-                sectionObserver.observe(section);
+            window.addEventListener('mousemove', e => {
+                const { clientX, clientY } = e;
+                cursorDot.style.left = `${clientX}px`;
+                cursorDot.style.top = `${clientY}px`;
+                cursorOutline.style.left = `${clientX}px`;
+                cursorOutline.style.top = `${clientY}px`;
             });
             
-            // 3. 3D Tilt Effect for Project Cards
-            projectCards.forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const { width, height } = rect;
-                    const rotateX = (y / height - 0.5) * -20; // Max rotation 10deg
-                    const rotateY = (x / width - 0.5) * 20;  // Max rotation 10deg
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-                });
-
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-                });
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => cursorOutline.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hover'));
             });
 
-            // 4. Reveal Elements on Scroll
-            const revealObserver = new IntersectionObserver((entries, observer) => {
+            // --- 2. HEADER SCROLL LOGIC ---
+            const header = document.getElementById('main-header');
+            window.addEventListener('scroll', () => {
+                header.classList.toggle('scrolled', window.scrollY > 50);
+            });
+
+            // --- 3. THREE.JS HERO BACKGROUND ---
+            let scene, camera, renderer, stars;
+            const mouse = { x: 0, y: 0 };
+
+            function initThreeJS() {
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+                camera.position.z = 1;
+                camera.rotation.x = Math.PI / 2;
+                
+                renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), alpha: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+
+                const starGeo = new THREE.BufferGeometry();
+                const starVertices = [];
+                for (let i = 0; i < 6000; i++) {
+                    const x = (Math.random() - 0.5) * 2000;
+                    const y = (Math.random() - 0.5) * 2000;
+                    const z = (Math.random() - 0.5) * 2000;
+                    starVertices.push(x, y, z);
+                }
+                starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+                
+                let starMaterial = new THREE.PointsMaterial({ color: 0xaaaaaa, size: 0.7 });
+                stars = new THREE.Points(starGeo, starMaterial);
+                scene.add(stars);
+                
+                window.addEventListener('mousemove', e => {
+                    mouse.x = e.clientX;
+                    mouse.y = e.clientY;
+                });
+                
+                animate();
+            }
+
+            function animate() {
+                stars.position.y += 0.02;
+                stars.rotation.y = -mouse.x * 0.00005;
+                stars.rotation.x = -mouse.y * 0.00005;
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+            initThreeJS();
+            
+            // --- 4. SCROLL-TRIGGERED ANIMATIONS ---
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.1 });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('.section-title, .about-content p').forEach(el => observer.observe(el));
+
+            // --- 5. HORIZONTAL SCROLL FOR PROJECTS ---
+            const stickyContainer = document.querySelector('.projects-sticky-container');
+            const projectsGrid = document.querySelector('.projects-grid');
+            if (window.innerWidth > 768) { // Only apply on desktop
+                const scrollableWidth = projectsGrid.scrollWidth - window.innerWidth;
+                document.querySelector('.projects-wrapper').style.height = `${scrollableWidth}px`;
+                
+                window.addEventListener('scroll', () => {
+                    const scrollTop = window.scrollY;
+                    const stickyTop = stickyContainer.parentElement.offsetTop;
+                    if (scrollTop > stickyTop && scrollTop < stickyTop + scrollableWidth) {
+                        projectsGrid.style.transform = `translateX(-${scrollTop - stickyTop}px)`;
+                    }
+                });
+            }
+
+            // --- 6. PROJECT MODAL LOGIC ---
+            const modalOverlay = document.getElementById('project-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDescription = document.getElementById('modal-description');
             
-            revealElements.forEach(el => {
-                revealObserver.observe(el);
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const projectId = card.dataset.projectId;
+                    const data = projectData[projectId];
+                    modalTitle.textContent = data.title;
+                    modalDescription.textContent = data.description;
+                    modalOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            function closeModal() {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            document.querySelector('.modal-close').addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) closeModal();
             });
 
         });
