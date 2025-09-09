@@ -242,12 +242,28 @@
             border: 1px solid var(--border-color);
             padding: 2rem;
             border-radius: 15px;
-            text-align: center;
+            text-align: left;
             backdrop-filter: blur(10px);
         }
-        .skill-card h3 { font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 1.5rem; }
+        .skill-card h3 { font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 1.5rem; text-align: center; }
         .skill-card ul { list-style: none; }
-        .skill-card li { margin-bottom: 0.8rem; }
+        .skill-item {
+            margin-bottom: 1rem;
+        }
+        .skill-bar {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 4px;
+            margin-top: 0.25rem;
+            overflow: hidden;
+        }
+        .skill-progress {
+            width: 0%;
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
         
         /*------------------------------------
           7. PROJECTS (CARD GRID)
@@ -270,7 +286,7 @@
             overflow: hidden;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(10px);
-            min-height: 400px;
+            min-height: 350px;
         }
         
         .project-card h3 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--primary-color); }
@@ -326,7 +342,7 @@
         }
 
         /*------------------------------------
-          9. CONTROLS PANEL
+          9. CONTROLS & GAMIFICATION
         ------------------------------------*/
         .controls-container {
             position: fixed;
@@ -386,22 +402,50 @@
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
         }
-        .control-group input[type="range"] {
-            width: 100%;
-        }
-        .control-group input[type="color"] {
-            width: 100%;
-            height: 40px;
-            border: none;
-            padding: 0;
-            background: transparent;
+        .control-group input[type="range"] { width: 100%; }
+        .control-group input[type="color"] { width: 100%; height: 40px; border: none; padding: 0; background: transparent; cursor: none; }
+
+        .secret-orb {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--primary-color), 0 0 30px var(--primary-color);
+            animation: pulse 2s infinite ease-in-out;
             cursor: none;
         }
+        @keyframes pulse {
+            0% { transform: scale(0.9); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(0.9); }
+        }
+        
+        .achievement-popup {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(10px);
+            z-index: 5000;
+            transform: translateX(-150%);
+            transition: transform 0.5s ease-in-out;
+        }
+        .achievement-popup.show {
+            transform: translateX(0);
+        }
+        .achievement-popup h4 { font-size: 1.1rem; color: var(--primary-color); }
 
         /*------------------------------------
           10. FOOTER
         ------------------------------------*/
         footer { text-align: center; padding: 3rem 0; }
+        .achievements-list h3 { color: var(--secondary-color); margin-bottom: 1rem; }
+        .achievements-list ul { list-style: none; }
+        .achievements-list li { margin-bottom: 0.5rem; opacity: 0.7; }
         
         /*------------------------------------
           11. RESPONSIVENESS
@@ -409,10 +453,11 @@
         @media(max-width: 768px) {
             .nav-links { display: none; }
             .strengths-goals-grid { grid-template-columns: 1fr; }
+            .secret-orb { display: none; /* Too tricky on mobile */ }
         }
     </style>
 </head>
-<body style="visibility: hidden;"> <!-- Hide body until preloader is done -->
+<body style="visibility: hidden;">
     
     <canvas id="page-canvas"></canvas>
 
@@ -447,49 +492,51 @@
                         <span class="line">G Sekhar Reddy</span>
                     </h1>
                     <p>Computer Science Student | Engineer | Game Developer</p>
-                    <a href="#projects" class="btn btn-primary interactive">Explore My Work</a>
+                    <a href="#projects" class="btn btn-primary interactive">Explore The Journey</a>
                 </div>
             </section>
 
             <section id="about">
                 <div class="container">
-                    <h2 class="section-title">About Me</h2>
+                    <h2 class="section-title">Character Bio</h2>
                     <div class="about-content">
                         <p>I’m a 3rd-year Computer Science and Engineering student at NIST University, Berhampur. I’m deeply passionate about Data Science, Game Development, and Machine Learning, with a strong interest in building impactful software projects. I also enjoy working on Android app development and web technologies, blending creativity with technical skills.</p>
+                        <div class="secret-orb interactive" style="top: -15px; left: -15px;" data-orb="1"></div>
                     </div>
                 </div>
             </section>
 
             <section id="skills">
                 <div class="container">
-                    <h2 class="section-title">Technical Arsenal</h2>
+                    <h2 class="section-title">Skill Tree</h2>
                     <div class="skills-grid">
                         <div class="skill-card">
                             <h3>Programming & Algorithms</h3>
                             <ul>
-                                <li>C Programming & Python</li>
-                                <li>Sorting (Quick, Merge, Heap)</li>
-                                <li>Dynamic Programming (LCS, Knapsack)</li>
-                                <li>Graph Traversal (BFS, DFS)</li>
+                                <li class="skill-item" data-progress="90"><span>C Programming & Python</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
+                                <li class="skill-item" data-progress="85"><span>Sorting (Quick, Merge, Heap)</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
+                                <li class="skill-item" data-progress="80"><span>Dynamic Programming (LCS, Knapsack)</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
+                                <li class="skill-item" data-progress="85"><span>Graph Traversal (BFS, DFS)</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
                             </ul>
                         </div>
                         <div class="skill-card">
                             <h3>Tools & Technologies</h3>
                             <ul>
-                                <li>Unreal Engine 5 & Android Studio</li>
-                                <li>Firebase & Room Database</li>
-                                <li>Figma & Canva</li>
-                                <li>VS Code & Git</li>
+                                <li class="skill-item" data-progress="80"><span>Unreal Engine 5 & Android Studio</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
+                                <li class="skill-item" data-progress="85"><span>Firebase & Room Database</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
+                                <li class="skill-item" data-progress="95"><span>Figma & Canva</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
+                                <li class="skill-item" data-progress="90"><span>VS Code & Git</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
                             </ul>
                         </div>
                         <div class="skill-card">
                             <h3>Soft Skills</h3>
                             <ul>
-                                <li>Teamwork & Collaboration</li>
-                                <li>Active Listening & Empathy</li>
-                                <li>Creative Problem-Solving</li>
-                                <li>Adaptability & Fast Learner</li>
+                                <li class="skill-item" data-progress="95"><span>Teamwork & Collaboration</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
+                                <li class="skill-item" data-progress="90"><span>Active Listening & Empathy</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
+                                <li class="skill-item" data-progress="85"><span>Creative Problem-Solving</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
+                                <li class="skill-item" data-progress="90"><span>Adaptability & Fast Learner</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
                             </ul>
+                            <div class="secret-orb interactive" style="bottom: 10px; right: 10px;" data-orb="2"></div>
                         </div>
                     </div>
                 </div>
@@ -497,7 +544,7 @@
 
             <section id="projects">
                 <div class="container">
-                    <h2 class="section-title">Engineering Showcase</h2>
+                    <h2 class="section-title">Completed Quests</h2>
                     <div class="projects-grid">
                         <div class="project-card interactive">
                             <h3>Task Manager Pro</h3>
@@ -521,7 +568,7 @@
             
             <section id="more-about-me">
                 <div class="container">
-                    <h2 class="section-title">Career Blueprint</h2>
+                    <h2 class="section-title">Main Quest</h2>
                     <div class="strengths-goals-grid">
                         <div class="card">
                             <h3>My Goals</h3>
@@ -539,29 +586,36 @@
 
             <section id="contact">
                 <div class="container contact-content">
-                    <h2 class="section-title">Initiate Contact</h2>
+                    <h2 class="section-title">Summon Developer</h2>
                     <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of an amazing team. Let's build something incredible together.</p>
                     <div class="contact-links">
                         <a href="mailto:[Your Email Here]" class="btn btn-primary interactive">Email Me</a>
                         <a href="[Your LinkedIn Link Here]" target="_blank" class="btn btn-secondary interactive">LinkedIn</a>
                         <a href="[Your GitHub Link Here]" target="_blank" class="btn btn-secondary interactive">GitHub</a>
+                        <div class="secret-orb interactive" style="position: absolute; bottom: -35px; left: 50%; transform: translateX(-50%);" data-orb="3"></div>
                     </div>
                 </div>
             </section>
 
             <section id="ask-question">
                 <div class="container ask-question-content">
-                    <h2 class="section-title">Have a Question?</h2>
+                    <h2 class="section-title">Side Quest</h2>
                     <p>Feel free to ask me anything about my projects, skills, or potential collaborations. I'll get back to you as soon as possible.</p>
                     <form class="question-form">
                         <textarea class="question-input interactive" placeholder="Type your question here..." rows="4"></textarea>
-                        <button type="submit" class="btn btn-primary interactive">Submit Question</button>
+                        <button type="submit" class="btn btn-primary interactive">Submit Query</button>
                     </form>
                 </div>
             </section>
         </main>
         
         <footer>
+            <div class="container achievements-list">
+                <h3>Achievements Unlocked</h3>
+                <ul id="achievements-display">
+                    <!-- Achievements will be added here by JS -->
+                </ul>
+            </div>
             <p>&copy; 2025 G Sekhar Reddy. Engineered with Three.js & GSAP.</p>
         </footer>
     </div>
@@ -755,7 +809,80 @@
                 }
             });
             
-            // --- 5. CONTROLS PANEL LOGIC ---
+            // --- 5. GAMIFICATION LOGIC ---
+            // Achievements
+            const achievements = {
+                'about': { title: 'The Origin Story', unlocked: false },
+                'skills': { title: 'Skill Tree Unlocked', unlocked: false },
+                'projects': { title: 'Quest Log Reviewed', unlocked: false },
+                'contact': { title: 'Summon Protocol Initiated', unlocked: false },
+            };
+            const achievementsDisplay = document.getElementById('achievements-display');
+
+            function showAchievement(id) {
+                if (achievements[id].unlocked) return;
+                achievements[id].unlocked = true;
+
+                const popup = document.createElement('div');
+                popup.className = 'achievement-popup';
+                popup.innerHTML = `<h4>Achievement Unlocked!</h4><p>${achievements[id].title}</p>`;
+                document.body.appendChild(popup);
+
+                const li = document.createElement('li');
+                li.textContent = `✅ ${achievements[id].title}`;
+                achievementsDisplay.appendChild(li);
+
+                gsap.timeline()
+                    .to(popup, { x: '0%', duration: 0.5, ease: 'power4.out' })
+                    .to(popup, { x: '-150%', duration: 0.5, ease: 'power4.in', delay: 3 })
+                    .then(() => popup.remove());
+            }
+
+            gsap.utils.toArray(['#about', '#skills', '#projects', '#contact']).forEach(section => {
+                ScrollTrigger.create({
+                    trigger: section,
+                    start: 'top 60%',
+                    onEnter: () => showAchievement(section.id)
+                });
+            });
+
+            // Skill bars
+            const skillItems = gsap.utils.toArray('.skill-item');
+            skillItems.forEach(item => {
+                const progress = item.dataset.progress;
+                const progressBar = item.querySelector('.skill-progress');
+                gsap.to(progressBar, {
+                    width: `${progress}%`,
+                    duration: 1.5,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: item,
+                        start: 'top 85%'
+                    }
+                });
+            });
+            
+            // Secret Orbs
+            const orbs = document.querySelectorAll('.secret-orb');
+            let foundOrbs = new Set();
+            orbs.forEach(orb => {
+                orb.addEventListener('click', () => {
+                    const orbId = orb.dataset.orb;
+                    if (!foundOrbs.has(orbId)) {
+                        foundOrbs.add(orbId);
+                        gsap.to(orb, { scale: 0, opacity: 0, duration: 0.5, ease: 'back.in' });
+                        
+                        showAchievement({ title: `Secret Orb ${foundOrbs.size}/3 Found!`, unlocked: false });
+
+                        if (foundOrbs.size === 3) {
+                            showAchievement({ title: 'Rainbow Mode Unlocked!', unlocked: false });
+                            document.getElementById('randomizeColorBtn').click();
+                        }
+                    }
+                });
+            });
+
+            // --- 6. CONTROLS PANEL LOGIC ---
             const controlsContainer = document.getElementById('controls-container');
             const toggleButton = controlsContainer.querySelector('.controls-toggle');
             const colorPicker = document.getElementById('particleColor');
@@ -802,7 +929,7 @@
                         r: color.r,
                         g: color.g,
                         b: color.b,
-                        duration: 2,
+                        duration: 2, // Faster transition
                         ease: "sine.inOut"
                     });
                 });
