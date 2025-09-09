@@ -19,6 +19,7 @@
             --text-light: #E0E0E0;
             --border-color: rgba(255, 255, 255, 0.1);
             --font-main: 'Poppins', sans-serif;
+            --font-mono: 'Courier New', Courier, monospace;
             --xp-color: #FFD700;
         }
 
@@ -61,10 +62,6 @@
         @keyframes scanline {
             0% { background-position-y: 0px; }
             100% { background-position-y: 200px; }
-        }
-
-        body.matrix-mode #page-canvas {
-             filter: hue-rotate(100deg) brightness(0.8);
         }
 
         #page-canvas {
@@ -159,6 +156,13 @@
             width: 60px;
             height: 60px;
             border: 3px solid var(--secondary-color);
+        }
+        
+        .cursor-outline.text-mode {
+            width: 10px;
+            height: 25px;
+            border-radius: 2px;
+            border: 2px solid var(--primary-color);
         }
 
         /*------------------------------------
@@ -264,6 +268,7 @@
             width: 100%;
             height: 100%;
             background: var(--bg-dark);
+            opacity: 0.8;
         }
         .glitch::before {
             left: 2px;
@@ -277,22 +282,9 @@
             clip: rect(85px, 450px, 90px, 0);
             animation: glitch-anim-2 5s infinite linear alternate-reverse;
         }
-        @keyframes glitch-anim {
-            0% { clip: rect(42px, 9999px, 44px, 0); transform: skew(0.3deg); }
-            /* ... more steps ... */
-            100% { clip: rect(63px, 9999px, 72px, 0); transform: skew(0.8deg); }
-        }
-        @keyframes glitch-anim-2 {
-            0% { clip: rect(7px, 9999px, 99px, 0); transform: skew(0.2deg); }
-            /* ... more steps ... */
-            100% { clip: rect(42px, 9999px, 95px, 0); transform: skew(0.6deg); }
-        }
-        @keyframes glitch-skew {
-            0% { transform: skew(0deg); }
-            10% { transform: skew(1deg); }
-            /* ... more steps ... */
-            100% { transform: skew(0deg); }
-        }
+        @keyframes glitch-anim { 0% { clip: rect(42px, 9999px, 44px, 0); transform: skew(0.3deg); } 100% { clip: rect(63px, 9999px, 72px, 0); transform: skew(0.8deg); } }
+        @keyframes glitch-anim-2 { 0% { clip: rect(7px, 9999px, 99px, 0); transform: skew(0.2deg); } 100% { clip: rect(42px, 9999px, 95px, 0); transform: skew(0.6deg); } }
+        @keyframes glitch-skew { 0% { transform: skew(0deg); } 100% { transform: skew(0deg); } }
 
         .hero-content p {
             font-size: clamp(1rem, 4vw, 1.5rem);
@@ -309,30 +301,55 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             margin-top: 2rem;
             border: none;
+            position: relative;
+            z-index: 1;
         }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        
+        .btn-primary { 
+            background: linear-gradient(45deg, var(--primary-color), #ff8c00); 
         }
-
-        .btn-primary { background-color: var(--primary-color); }
         .btn-secondary { background-color: var(--secondary-color); }
         
         /*------------------------------------
           6. CONTENT CARDS & SECTIONS
         ------------------------------------*/
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.06), transparent 40%);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .glass-card:hover::before {
+            opacity: 1;
+        }
+        .glass-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
         .about-content p {
             max-width: 800px;
             margin: 0 auto;
             text-align: center;
             font-size: 1.1rem;
             line-height: 1.8;
-            background: var(--glass-bg);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
+            padding: 2rem; /* Simplified */
         }
         
         .skills-grid {
@@ -343,32 +360,13 @@
         }
         
         .skill-card, .card {
-            background: var(--glass-bg);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 15px;
             text-align: left;
-            backdrop-filter: blur(10px);
         }
         .skill-card h3 { font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 1.5rem; text-align: center; }
         .skill-card ul { list-style: none; }
-        .skill-item {
-            margin-bottom: 1rem;
-        }
-        .skill-bar {
-            width: 100%;
-            height: 8px;
-            background-color: rgba(0,0,0,0.2);
-            border-radius: 4px;
-            margin-top: 0.25rem;
-            overflow: hidden;
-        }
-        .skill-progress {
-            width: 0%;
-            height: 100%;
-            background-color: var(--primary-color);
-            border-radius: 4px;
-        }
+        .skill-item { margin-bottom: 1rem; }
+        .skill-bar { width: 100%; height: 8px; background-color: rgba(0,0,0,0.2); border-radius: 4px; margin-top: 0.25rem; overflow: hidden; }
+        .skill-progress { width: 0%; height: 100%; background-color: var(--primary-color); border-radius: 4px; }
         
         /*------------------------------------
           7. PROJECTS (CARD GRID)
@@ -380,17 +378,10 @@
         }
 
         .project-card {
-            background: var(--glass-bg);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
             padding: 2rem;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
             min-height: 350px;
         }
         
@@ -409,13 +400,9 @@
         
         .contact-content, .ask-question-content { 
             text-align: center; max-width: 700px; margin: 0 auto; 
-            background: var(--glass-bg);
-            border: 1px solid var(--border-color);
             padding: 3rem;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
         }
-        .contact-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 2rem; }
+        .contact-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 2rem; flex-wrap: wrap; }
         
         .question-form {
             margin-top: 2rem;
@@ -435,16 +422,9 @@
             resize: vertical;
             transition: border-color 0.3s ease;
         }
-        .question-input::placeholder {
-            color: rgba(224, 224, 224, 0.5);
-        }
-        .question-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-        .question-form .btn {
-            align-self: center;
-        }
+        .question-input::placeholder { color: rgba(224, 224, 224, 0.5); }
+        .question-input:focus { outline: none; border-color: var(--primary-color); }
+        .question-form .btn { align-self: center; }
 
         /*------------------------------------
           9. CONTROLS & GAMIFICATION
@@ -488,35 +468,15 @@
             transform: translateY(20px);
             transition: all 0.3s ease;
         }
-        .controls-container.open .controls-toggle svg {
-            transform: rotate(90deg);
-        }
-        .controls-container.open .controls-panel {
-            visibility: visible;
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .control-group {
-            margin-bottom: 1rem;
-        }
-        .control-group:last-child {
-            margin-bottom: 0;
-        }
-        .control-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
+        .controls-container.open .controls-toggle svg { transform: rotate(90deg); }
+        .controls-container.open .controls-panel { visibility: visible; opacity: 1; transform: translateY(0); }
+        .control-group { margin-bottom: 1rem; }
+        .control-group:last-child { margin-bottom: 0; }
+        .control-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; }
         .control-group input[type="range"] { width: 100%; }
         .control-group input[type="color"] { width: 100%; height: 40px; border: none; padding: 0; background: transparent; cursor: none; }
-        .sound-toggle-btn {
-            width: 100%;
-            margin-top: 0.5rem;
-            padding: 0.6rem 1rem !important;
-        }
-        #cycle-colors-control {
-            display: none;
-        }
+        .sound-toggle-btn { width: 100%; margin-top: 0.5rem; padding: 0.6rem 1rem !important; }
+        #cycle-colors-control { display: none; }
 
         .secret-orb {
             position: absolute;
@@ -528,11 +488,7 @@
             animation: pulse 2s infinite ease-in-out;
             cursor: none;
         }
-        @keyframes pulse {
-            0% { transform: scale(0.9); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(0.9); }
-        }
+        @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.1); } 100% { transform: scale(0.9); } }
         
         .achievement-popup {
             position: fixed;
@@ -548,9 +504,7 @@
             transition: transform 0.5s ease-in-out;
             border-left: 5px solid var(--primary-color);
         }
-        .achievement-popup.show {
-            transform: translateX(0);
-        }
+        .achievement-popup.show { transform: translateX(0); }
         .achievement-popup h4 { font-size: 1.1rem; color: var(--xp-color); }
         .achievement-popup p { color: var(--text-light); opacity: 0.9; font-size: 0.9rem;}
         
@@ -569,22 +523,11 @@
             transform: translateX(-100%);
             transition: transform 0.5s ease-in-out;
         }
-        .achievements-sidebar.open {
-            transform: translateX(0);
-        }
+        .achievements-sidebar.open { transform: translateX(0); }
         .achievements-sidebar h3 { color: var(--secondary-color); margin-bottom: 1rem; }
         .achievements-sidebar ul { list-style: none; }
         .achievements-sidebar li { margin-bottom: 0.5rem; opacity: 0.8; }
-        .achievements-close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: none;
-            border: none;
-            color: var(--text-light);
-            font-size: 2rem;
-            cursor: none;
-        }
+        .achievements-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--text-light); font-size: 2rem; cursor: none; }
 
         .achievements-toggle {
             position: fixed;
@@ -602,19 +545,56 @@
             cursor: none;
             z-index: 1001;
         }
-        .achievements-toggle svg {
-            width: 24px;
-            height: 24px;
-            fill: var(--text-light);
+        .achievements-toggle svg { width: 24px; height: 24px; fill: var(--text-light); }
+        
+        /*------------------------------------
+          10. TERMINAL
+        ------------------------------------*/
+        .terminal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50vh;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9000;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            font-family: var(--font-mono);
+            color: #0f0;
+            transform: translateY(100%);
+            transition: transform 0.5s ease-in-out;
         }
+        .terminal.open { transform: translateY(0); }
+        .terminal-output { flex-grow: 1; overflow-y: auto; }
+        .terminal-output p { margin-bottom: 0.5em; }
+        .terminal-line { display: flex; }
+        .terminal-prompt { margin-right: 0.5em; }
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: #0f0;
+            font-family: var(--font-mono);
+            width: 100%;
+            outline: none;
+        }
+        .terminal-cursor {
+            background: #0f0;
+            width: 8px;
+            display: inline-block;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
 
         /*------------------------------------
-          10. FOOTER
+          11. FOOTER
         ------------------------------------*/
         footer { text-align: center; padding: 3rem 0; }
         
         /*------------------------------------
-          11. RESPONSIVENESS
+          12. RESPONSIVENESS
         ------------------------------------*/
         @media(max-width: 992px) {
             .nav-links { display: none; }
@@ -674,7 +654,7 @@
             <section id="about">
                 <div class="container">
                     <h2 class="section-title">Character Bio</h2>
-                    <div class="about-content">
+                    <div class="about-content glass-card">
                         <p>I’m a 3rd-year Computer Science and Engineering student at NIST University, Berhampur. I’m deeply passionate about Data Science, Game Development, and Machine Learning, with a strong interest in building impactful software projects. I also enjoy working on Android app development and web technologies, blending creativity with technical skills.</p>
                         <div class="secret-orb interactive" style="top: -15px; left: -15px;" data-orb="1"></div>
                     </div>
@@ -685,7 +665,7 @@
                 <div class="container">
                     <h2 class="section-title">Skill Tree</h2>
                     <div class="skills-grid">
-                        <div class="skill-card">
+                        <div class="skill-card glass-card">
                             <h3>Programming & Algorithms</h3>
                             <ul>
                                 <li class="skill-item" data-progress="90"><span>C Programming & Python</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
@@ -694,7 +674,7 @@
                                 <li class="skill-item" data-progress="85"><span>Graph Traversal (BFS, DFS)</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
                             </ul>
                         </div>
-                        <div class="skill-card">
+                        <div class="skill-card glass-card">
                             <h3>Tools & Technologies</h3>
                             <ul>
                                 <li class="skill-item" data-progress="80"><span>Unreal Engine 5 & Android Studio</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
@@ -703,7 +683,7 @@
                                 <li class="skill-item" data-progress="90"><span>VS Code & Git</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
                             </ul>
                         </div>
-                        <div class="skill-card">
+                        <div class="skill-card glass-card">
                             <h3>Soft Skills</h3>
                             <ul>
                                 <li class="skill-item" data-progress="95"><span>Teamwork & Collaboration</span><div class="skill-bar"><div class="skill-progress"></div></div></li>
@@ -721,19 +701,19 @@
                 <div class="container">
                     <h2 class="section-title">Completed Quests</h2>
                     <div class="projects-grid">
-                        <div class="project-card interactive">
+                        <div class="project-card glass-card interactive">
                             <h3>Task Manager Pro</h3>
                             <p>An Android Studio app with task CRUD, reminders, notifications, fluid animations, and data persistence using the Room database.</p>
                         </div>
-                        <div class="project-card interactive">
+                        <div class="project-card glass-card interactive">
                             <h3>Feedback System</h3>
                             <p>An Android project with Firebase Realtime Database integration, featuring distinct student-teacher interfaces, smooth animations, and a polished UI.</p>
                         </div>
-                        <div class="project-card interactive">
+                        <div class="project-card glass-card interactive">
                             <h3>Intelligent Query Retrieval System</h3>
                             <p>A hackathon project utilizing LLMs to process natural language queries on unstructured documents, enabling semantic search and information extraction.</p>
                         </div>
-                         <div class="project-card interactive">
+                         <div class="project-card glass-card interactive">
                             <h3>Personal Experiments</h3>
                             <p>Ongoing personal projects where I explore new algorithms, experiment with game engine features, and build small tools for fun and learning.</p>
                         </div>
@@ -745,12 +725,12 @@
                 <div class="container">
                     <h2 class="section-title">Character Arc</h2>
                     <div class="strengths-goals-grid">
-                        <div class="card">
+                        <div class="card glass-card">
                             <h3>My Goals</h3>
                             <p><strong>Short-Term:</strong> To secure a placement in a good MNC where I can sharpen my technical and collaborative skills.</p>
                             <p><strong>Long-Term:</strong> To build my own startup, creating impactful solutions in the tech and gaming industries.</p>
                         </div>
-                        <div class="card">
+                        <div class="card glass-card">
                             <h3>Strengths & Weakness</h3>
                             <p><strong>Strengths:</strong> Active listener, creative thinker, and a strong problem-solving mindset.</p>
                             <p><strong>Weakness:</strong> Stage fear, which I’m actively working to overcome through continuous practice.</p>
@@ -760,11 +740,12 @@
             </section>
 
             <section id="contact">
-                <div class="container contact-content">
+                <div class="container contact-content glass-card">
                     <h2 class="section-title">Assemble The Party</h2>
                     <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of an amazing team. Let's build something incredible together.</p>
                     <div class="contact-links">
-                        <a href="mailto:[Your Email Here]" class="btn btn-primary interactive">Email Me</a>
+                        <a href="#" target="_blank" class="btn btn-primary interactive">View Resume</a>
+                        <a href="mailto:[Your Email Here]" class="btn btn-secondary interactive">Email Me</a>
                         <a href="[Your LinkedIn Link Here]" target="_blank" class="btn btn-secondary interactive">LinkedIn</a>
                         <a href="[Your GitHub Link Here]" target="_blank" class="btn btn-secondary interactive">GitHub</a>
                         <div class="secret-orb interactive" style="position: absolute; bottom: -35px; left: 50%; transform: translateX(-50%);" data-orb="3"></div>
@@ -773,7 +754,7 @@
             </section>
 
             <section id="ask-question">
-                <div class="container ask-question-content">
+                <div class="container ask-question-content glass-card">
                     <h2 class="section-title">The Final Boss</h2>
                     <p>Challenge me with your queries, project ideas, or collaborations. I'll get back to you as soon as possible with a worthy response.</p>
                     <form class="question-form">
@@ -827,6 +808,14 @@
         </div>
     </div>
     
+    <div class="terminal" id="terminal">
+        <div class="terminal-output" id="terminal-output"></div>
+        <div class="terminal-line">
+            <span class="terminal-prompt">GSR@Portfolio:~$</span>
+            <input type="text" class="terminal-input" id="terminal-input" autofocus>
+        </div>
+    </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
@@ -866,75 +855,47 @@
             });
             
             function startAnimations() {
-                 // Initial achievement
                 showAchievement(achievements['journey']);
+                gsap.from('.hero-content .line', { y: '100%', stagger: 0.1, duration: 1, ease: 'power4.out' });
 
-                // Hero text animation
-                gsap.from('.hero-content .line', {
-                    y: '100%',
-                    stagger: 0.1,
-                    duration: 1,
-                    ease: 'power4.out',
-                });
-
-                // Set up all other scroll-triggered animations
                 const sections = gsap.utils.toArray('main > section');
                 sections.forEach(section => {
                     const title = section.querySelector('.section-title');
-                    const content = section.querySelectorAll('.about-content p, .skill-card, .project-card, .card, .contact-content, .ask-question-content');
-                    
-                    if (title) {
-                        gsap.from(title, {
-                            scrollTrigger: { trigger: title, start: 'top 85%' },
-                            opacity: 0, y: 50, duration: 1
-                        });
-                    }
-                    if (content.length > 0) {
-                        gsap.from(content, {
-                            scrollTrigger: { trigger: section, start: 'top 70%' },
-                            opacity: 0, y: 50, duration: 1, stagger: 0.2
-                        });
-                    }
+                    const content = section.querySelectorAll('.glass-card');
+                    if (title) { gsap.from(title, { scrollTrigger: { trigger: title, start: 'top 85%' }, opacity: 0, y: 50, duration: 1 }); }
+                    if (content.length > 0) { gsap.from(content, { scrollTrigger: { trigger: section, start: 'top 70%' }, opacity: 0, y: 50, duration: 1, stagger: 0.2 }); }
                 });
 
-                 // Skill bars animation setup
-                const skillItems = gsap.utils.toArray('.skill-item');
-                skillItems.forEach(item => {
-                    const progress = item.dataset.progress;
-                    const progressBar = item.querySelector('.skill-progress');
-                    gsap.to(progressBar, {
-                        width: `${progress}%`,
+                gsap.utils.toArray('.skill-item').forEach(item => {
+                    gsap.to(item.querySelector('.skill-progress'), {
+                        width: `${item.dataset.progress}%`,
                         duration: 1.5,
                         ease: 'power3.out',
-                        scrollTrigger: {
-                            trigger: item,
-                            start: 'top 85%'
-                        }
+                        scrollTrigger: { trigger: item, start: 'top 85%' }
                     });
                 });
             }
 
-
             // --- 1. CUSTOM CURSOR & MAGNETIC EFFECT ---
             const cursorDot = document.querySelector('.cursor-dot');
             const cursorOutline = document.querySelector('.cursor-outline');
-            
-            gsap.set(cursorDot, { xPercent: -50, yPercent: -50 });
-            gsap.set(cursorOutline, { xPercent: -50, yPercent: -50 });
-            
+            gsap.set([cursorDot, cursorOutline], { xPercent: -50, yPercent: -50 });
             window.addEventListener('mousemove', e => {
                 gsap.to(cursorDot, { duration: 0.1, x: e.clientX, y: e.clientY });
                 gsap.to(cursorOutline, { duration: 0.4, x: e.clientX, y: e.clientY });
             });
-            
             document.querySelectorAll('.interactive').forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    cursorOutline.classList.add('hover');
-                    gsap.to(el, { scale: 1.05, duration: 0.3 });
-                });
-                el.addEventListener('mouseleave', () => {
-                    cursorOutline.classList.remove('hover');
-                    gsap.to(el, { scale: 1, duration: 0.3 });
+                el.addEventListener('mouseenter', () => cursorOutline.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hover'));
+            });
+            
+            document.querySelectorAll('.glass-card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
                 });
             });
 
@@ -943,22 +904,18 @@
             ScrollTrigger.create({
                 start: 'top top',
                 end: 99999,
-                onUpdate: self => {
-                    header.classList.toggle('scrolled', self.direction === 1 && self.progress > 0);
-                }
+                onUpdate: self => header.classList.toggle('scrolled', self.direction === 1 && self.progress > 0)
             });
 
-            // --- 3. THREE.JS HERO BACKGROUND ---
+            // --- 3. THREE.JS BACKGROUND ---
             let scene, camera, renderer, particles;
             const mouse = new THREE.Vector2();
-            let particleSpeed = 0.0005;
-            let colorTween;
+            let particleSpeed = 0.0005, colorTween;
 
             function initThreeJS() {
                 scene = new THREE.Scene();
                 camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
                 camera.position.z = 50;
-
                 renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('page-canvas'), alpha: true });
                 renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -969,12 +926,7 @@
                 }
                 const particlesGeometry = new THREE.BufferGeometry();
                 particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                const particlesMaterial = new THREE.PointsMaterial({
-                    color: 0x1E90FF,
-                    size: 0.2,
-                    transparent: true,
-                    blending: THREE.AdditiveBlending
-                });
+                const particlesMaterial = new THREE.PointsMaterial({ color: 0x1E90FF, size: 0.2, transparent: true, blending: THREE.AdditiveBlending });
                 particles = new THREE.Points(particlesGeometry, particlesMaterial);
                 scene.add(particles);
 
@@ -984,20 +936,10 @@
                 });
                 
                 window.addEventListener('click', () => {
-                    gsap.to(particles.scale, {
-                        duration: 0.5,
-                        x: 1.5, y: 1.5, z: 1.5,
-                        ease: 'power4.out',
-                        onComplete: () => {
-                            gsap.to(particles.scale, {
-                                duration: 1,
-                                x: 1, y: 1, z: 1,
-                                ease: 'elastic.out(1, 0.3)'
-                            });
-                        }
-                    });
+                    gsap.to(particles.scale, { duration: 0.5, x: 1.5, y: 1.5, z: 1.5, ease: 'power4.out', onComplete: () => {
+                        gsap.to(particles.scale, { duration: 1, x: 1, y: 1, z: 1, ease: 'elastic.out(1, 0.3)' });
+                    }});
                 });
-
                 animate();
             }
 
@@ -1005,26 +947,21 @@
                 requestAnimationFrame(animate);
                 particles.rotation.x += particleSpeed;
                 particles.rotation.y += particleSpeed;
-                
                 camera.position.x += (mouse.x * 5 - camera.position.x) * 0.02;
                 camera.position.y += (mouse.y * 5 - camera.position.y) * 0.02;
                 camera.lookAt(scene.position);
-                
                 renderer.render(scene, camera);
             }
             initThreeJS();
             
             // --- 5. GAMIFICATION LOGIC ---
-            // Sound Engine
-            let isSoundEnabled = false;
-            let audioStarted = false;
+            let isSoundEnabled = false, audioStarted = false;
             const soundToggle = document.getElementById('sound-toggle');
             
             const achievementSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 } }).toDestination();
             const levelUpSound = new Tone.Synth({ oscillator: { type: 'fatsawtooth' }, envelope: { attack: 0.05, decay: 0.5, sustain: 0.1, release: 0.5 } }).toDestination();
             const orbSound = new Tone.Synth({ oscillator: { type: 'triangle8' }, envelope: { attack: 0.01, decay: 0.8, sustain: 0.1, release: 0.2 } }).toDestination();
             const godModeSound = new Tone.MembraneSynth().toDestination();
-
 
             function playSound(sound, note, duration = '8n') {
                 if (!isSoundEnabled) return;
@@ -1034,24 +971,16 @@
             soundToggle.addEventListener('click', () => {
                 isSoundEnabled = !isSoundEnabled;
                 soundToggle.textContent = isSoundEnabled ? 'Sound ON' : 'Sound OFF';
-                if (!audioStarted) {
-                   Tone.start();
-                   audioStarted = true;
-                }
+                if (!audioStarted) { Tone.start(); audioStarted = true; }
             });
 
-            // XP and Leveling System
-            let currentLevel = 1;
-            let currentXP = 0;
-            let xpToNextLevel = 100;
+            let currentLevel = 1, currentXP = 0, xpToNextLevel = 100;
             const levelIndicator = document.getElementById('level-indicator');
             const xpProgress = document.getElementById('xp-progress');
 
             function addXP(amount) {
                 currentXP += amount;
-                while (currentXP >= xpToNextLevel) {
-                    levelUp();
-                }
+                while (currentXP >= xpToNextLevel) { levelUp(); }
                 updateXpBar();
             }
 
@@ -1064,12 +993,8 @@
                 showAchievement({ title: `Level Up! Reached Level ${currentLevel}`, unlocked: false });
             }
 
-            function updateXpBar() {
-                const percentage = (currentXP / xpToNextLevel) * 100;
-                xpProgress.style.width = `${percentage}%`;
-            }
+            function updateXpBar() { xpProgress.style.width = `${(currentXP / xpToNextLevel) * 100}%`; }
 
-            // Achievements
             const achievements = {
                 'journey': { title: 'The Journey Begins', unlocked: false },
                 'about': { title: 'The Origin Story', unlocked: false, xp: 25 },
@@ -1083,69 +1008,44 @@
             function showAchievement(achievement) {
                 if (achievement.unlocked) return;
                 achievement.unlocked = true;
-
                 const popup = document.createElement('div');
                 popup.className = 'achievement-popup';
                 popup.innerHTML = `<h4>Achievement Unlocked!</h4><p>${achievement.title}</p>`;
                 document.body.appendChild(popup);
                 playSound(achievementSound, 'C6');
-
-                // Add to sidebar
                 const li = document.createElement('li');
                 li.textContent = `✅ ${achievement.title}`;
-                if (achievementsDisplay.firstChild) {
-                    achievementsDisplay.insertBefore(li, achievementsDisplay.firstChild);
-                } else {
-                    achievementsDisplay.appendChild(li);
-                }
-                
-                gsap.timeline()
-                    .to(popup, { x: '0%', duration: 0.5, ease: 'power4.out' })
-                    .to(popup, { x: '-150%', duration: 0.5, ease: 'power4.in', delay: 3 })
-                    .then(() => popup.remove());
+                achievementsDisplay.insertBefore(li, achievementsDisplay.firstChild);
+                gsap.timeline().to(popup, { x: '0%', duration: 0.5, ease: 'power4.out' }).to(popup, { x: '-150%', duration: 0.5, ease: 'power4.in', delay: 3 }).then(() => popup.remove());
             }
             
             gsap.utils.toArray(['#about', '#skills', '#projects', '#contact']).forEach(section => {
-                ScrollTrigger.create({
-                    trigger: section,
-                    start: 'top 60%',
-                    onEnter: () => {
-                        const achievement = achievements[section.id];
-                        if (!achievement.unlocked) {
-                            addXP(achievement.xp);
-                            showAchievement(achievement);
-                        }
-                    }
-                });
+                ScrollTrigger.create({ trigger: section, start: 'top 60%', onEnter: () => {
+                    const achievement = achievements[section.id];
+                    if (!achievement.unlocked) { addXP(achievement.xp); showAchievement(achievement); }
+                }});
             });
             
-            // Secret Orbs
-            const orbs = document.querySelectorAll('.secret-orb');
             let foundOrbs = new Set();
-            orbs.forEach(orb => {
+            document.querySelectorAll('.secret-orb').forEach(orb => {
                 orb.addEventListener('click', () => {
                     const orbId = orb.dataset.orb;
                     if (!foundOrbs.has(orbId)) {
                         foundOrbs.add(orbId);
                         gsap.to(orb, { scale: 0, opacity: 0, duration: 0.5, ease: 'back.in' });
                         playSound(orbSound, 'G5');
-                        
-                        const orbAchievement = { title: `Secret Orb ${foundOrbs.size}/3 Found!`, unlocked: false };
-                        showAchievement(orbAchievement);
+                        showAchievement({ title: `Secret Orb ${foundOrbs.size}/3 Found!`, unlocked: false });
                         addXP(50);
-
                         if (foundOrbs.size === 3) {
-                            const finalOrbAchievement = { title: 'Rainbow Mode Unlocked!', unlocked: false };
-                            showAchievement(finalOrbAchievement);
+                            showAchievement({ title: 'Rainbow Mode Unlocked!', unlocked: false });
                             document.getElementById('cycle-colors-control').style.display = 'block';
                             document.getElementById('randomizeColorBtn').click();
-                            addXP(100); // Big bonus for finding all
+                            addXP(100);
                         }
                     }
                 });
             });
 
-            // IDKFA Easter Egg
             const idkfaCode = ['i', 'd', 'k', 'f', 'a'];
             let idkfaIndex = 0;
             document.addEventListener('keydown', (e) => {
@@ -1157,83 +1057,94 @@
                             playSound(godModeSound, "C2", "1n");
                             showAchievement(achievements['godmode']);
                             addXP(achievements['godmode'].xp);
-                            // Unlock all other achievements
-                            Object.keys(achievements).forEach(key => {
-                                if (!achievements[key].unlocked) {
-                                    showAchievement(achievements[key]);
-                                }
-                            });
+                            Object.keys(achievements).forEach(key => { if (!achievements[key].unlocked) { showAchievement(achievements[key]); } });
                         }
                     }
-                } else {
-                    idkfaIndex = 0;
-                }
+                } else { idkfaIndex = 0; }
             });
 
-            // --- 6. CONTROLS & SIDEBAR PANEL LOGIC ---
+            // --- 6. CONTROLS, SIDEBAR, TERMINAL ---
             const controlsContainer = document.getElementById('controls-container');
-            const toggleButton = controlsContainer.querySelector('.controls-toggle');
+            controlsContainer.querySelector('.controls-toggle').addEventListener('click', () => controlsContainer.classList.toggle('open'));
+            
             const colorPicker = document.getElementById('particleColor');
-            
-            toggleButton.addEventListener('click', () => {
-                controlsContainer.classList.toggle('open');
-            });
-            
-            colorPicker.addEventListener('input', (e) => {
-                if(colorTween) colorTween.kill();
-                particles.material.color.set(e.target.value);
-            });
-            document.getElementById('particleSize').addEventListener('input', (e) => {
-                particles.material.size = parseFloat(e.target.value);
-            });
-            document.getElementById('particleSpeed').addEventListener('input', (e) => {
-                particleSpeed = parseFloat(e.target.value);
-            });
+            colorPicker.addEventListener('input', e => { if(colorTween) colorTween.kill(); particles.material.color.set(e.target.value); });
+            document.getElementById('particleSize').addEventListener('input', e => { particles.material.size = parseFloat(e.target.value); });
+            document.getElementById('particleSpeed').addEventListener('input', e => { particleSpeed = parseFloat(e.target.value); });
             
             document.getElementById('randomizeColorBtn').addEventListener('click', () => {
-                if (colorTween) {
-                    colorTween.kill();
-                }
-
-                const colorPalette = [
-                    new THREE.Color("#1E90FF"), // Blue
-                    new THREE.Color("#00FF00"), // Green
-                    new THREE.Color("#FFC0CB"), // Pink
-                    new THREE.Color("#FFA500"), // Orange
-                    new THREE.Color("#FF0000"), // Red
-                    new THREE.Color("#FFFF00"), // Yellow
-                    new THREE.Color("#87CEEB")  // Sky Blue
-                ];
-
-                colorTween = gsap.timeline({
-                    repeat: -1,
-                    onUpdate: function() {
-                        colorPicker.value = '#' + particles.material.color.getHexString();
-                    }
-                });
-
-                colorPalette.forEach(color => {
-                    colorTween.to(particles.material.color, {
-                        r: color.r,
-                        g: color.g,
-                        b: color.b,
-                        duration: 2, // Faster transition
-                        ease: "sine.inOut"
-                    });
-                });
+                if (colorTween) { colorTween.kill(); }
+                const colorPalette = ["#1E90FF", "#00FF00", "#FFC0CB", "#FFA500", "#FF0000", "#FFFF00", "#87CEEB"].map(c => new THREE.Color(c));
+                colorTween = gsap.timeline({ repeat: -1, onUpdate: () => { colorPicker.value = '#' + particles.material.color.getHexString(); } });
+                colorPalette.forEach(color => { colorTween.to(particles.material.color, { r: color.r, g: color.g, b: color.b, duration: 2, ease: "sine.inOut" }); });
             });
 
-            // Achievements sidebar
             const sidebar = document.getElementById('achievements-sidebar');
-            const sidebarToggle = document.getElementById('achievements-toggle');
-            const sidebarClose = sidebar.querySelector('.achievements-close');
+            document.getElementById('achievements-toggle').addEventListener('click', () => sidebar.classList.add('open'));
+            sidebar.querySelector('.achievements-close').addEventListener('click', () => sidebar.classList.remove('open'));
 
-            sidebarToggle.addEventListener('click', () => sidebar.classList.add('open'));
-            sidebarClose.addEventListener('click', () => sidebar.classList.remove('open'));
+            // Terminal
+            const terminal = document.getElementById('terminal');
+            const terminalInput = document.getElementById('terminal-input');
+            const terminalOutput = document.getElementById('terminal-output');
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '`') {
+                    terminal.classList.toggle('open');
+                    if (terminal.classList.contains('open')) {
+                        terminalInput.focus();
+                        cursorOutline.classList.add('text-mode');
+                    } else {
+                         cursorOutline.classList.remove('text-mode');
+                    }
+                }
+            });
 
+            terminalInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const command = e.target.value.toLowerCase();
+                    const output = document.createElement('p');
+                    output.innerHTML = `<span class="terminal-prompt">GSR@Portfolio:~$</span> ${command}`;
+                    terminalOutput.appendChild(output);
+                    
+                    handleCommand(command);
+                    e.target.value = '';
+                    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                }
+            });
+
+            function handleCommand(cmd) {
+                const response = document.createElement('p');
+                let content = '';
+                switch(cmd) {
+                    case 'help':
+                        content = 'Available commands: help, about, skills, projects, contact, clear';
+                        break;
+                    case 'about':
+                        content = document.querySelector('#about .about-content p').textContent;
+                        break;
+                    case 'skills':
+                        content = 'Loading Skill Tree...';
+                        document.querySelectorAll('#skills .skill-item span').forEach(s => content += `\n- ${s.textContent}`);
+                        break;
+                    case 'projects':
+                         content = 'Loading Quest Log...';
+                         document.querySelectorAll('#projects .project-card h3').forEach(p => content += `\n- ${p.textContent}`);
+                         break;
+                    case 'contact':
+                         content = 'Contact info loaded. Use the main UI buttons to connect.';
+                         break;
+                    case 'clear':
+                         terminalOutput.innerHTML = '';
+                         return;
+                    default:
+                        content = `bash: command not found: ${cmd}`;
+                }
+                response.innerText = content;
+                terminalOutput.appendChild(response);
+            }
         });
     </script>
 </body>
 </html>
-
 
