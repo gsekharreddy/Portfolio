@@ -47,6 +47,13 @@
             height: 100vh;
             z-index: -1;
         }
+        
+        #content-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            overflow: hidden;
+        }
 
         .container {
             max-width: 1200px;
@@ -246,7 +253,7 @@
           7. PROJECTS (HORIZONTAL SCROLL)
         ------------------------------------*/
         #projects { padding: 0; }
-        .projects-wrapper { height: 300vh; position: relative; }
+        .projects-wrapper { position: relative; }
         .projects-sticky-container { position: sticky; top: 0; height: 100vh; overflow: hidden; }
         .projects-grid {
             height: 100%;
@@ -432,140 +439,146 @@
         </div>
     </div>
 
-    <header class="main-header" id="main-header">
-        <nav class="navbar container">
-            <a href="#hero" class="nav-logo interactive">G Sekhar <span>Reddy</span></a>
-            <ul class="nav-links">
-                <li><a href="#about" class="interactive">About</a></li>
-                <li><a href="#skills" class="interactive">Skills</a></li>
-                <li><a href="#projects" class="interactive">Projects</a></li>
-                <li><a href="#contact" class="interactive">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div id="content-wrapper">
+        <header class="main-header" id="main-header">
+            <nav class="navbar container">
+                <a href="#hero" class="nav-logo interactive">G Sekhar <span>Reddy</span></a>
+                <ul class="nav-links">
+                    <li><a href="#about" class="interactive">About</a></li>
+                    <li><a href="#skills" class="interactive">Skills</a></li>
+                    <li><a href="#projects" class="interactive">Projects</a></li>
+                    <li><a href="#contact" class="interactive">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
 
-    <main>
-        <section id="hero" class="hero">
-            <div class="hero-content container">
-                <h1>
-                    <span class="line">G Sekhar Reddy</span>
-                </h1>
-                <p>Computer Science Student | Engineer | Game Developer</p>
-                <a href="#projects" class="btn btn-primary interactive">Explore My Work</a>
-            </div>
-        </section>
-
-        <section id="about">
-            <div class="container">
-                <h2 class="section-title">About Me</h2>
-                <div class="about-content">
-                    <p>I’m a 3rd-year Computer Science and Engineering student at NIST University, Berhampur. I’m deeply passionate about Data Science, Game Development, and Machine Learning, with a strong interest in building impactful software projects. I also enjoy working on Android app development and web technologies, blending creativity with technical skills.</p>
+        <main>
+            <section id="hero" class="hero">
+                <div class="hero-content container">
+                    <h1>
+                        <span class="line">G Sekhar Reddy</span>
+                    </h1>
+                    <p>Computer Science Student | Engineer | Game Developer</p>
+                    <a href="#projects" class="btn btn-primary interactive">Explore My Work</a>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="skills">
-            <div class="container">
-                <h2 class="section-title">Technical Arsenal</h2>
-                <div class="skills-grid">
-                    <div class="skill-card">
-                        <h3>Programming & Algorithms</h3>
-                        <ul>
-                            <li>C Programming & Python</li>
-                            <li>Sorting (Quick, Merge, Heap)</li>
-                            <li>Dynamic Programming (LCS, Knapsack)</li>
-                            <li>Graph Traversal (BFS, DFS)</li>
-                        </ul>
-                    </div>
-                    <div class="skill-card">
-                        <h3>Tools & Technologies</h3>
-                        <ul>
-                            <li>Unreal Engine 5 & Android Studio</li>
-                            <li>Firebase & Room Database</li>
-                            <li>Figma & Canva</li>
-                            <li>VS Code & Git</li>
-                        </ul>
-                    </div>
-                    <div class="skill-card">
-                        <h3>Soft Skills</h3>
-                        <ul>
-                            <li>Teamwork & Collaboration</li>
-                            <li>Active Listening & Empathy</li>
-                            <li>Creative Problem-Solving</li>
-                            <li>Adaptability & Fast Learner</li>
-                        </ul>
+            <section id="about">
+                <div class="container">
+                    <h2 class="section-title">About Me</h2>
+                    <div class="about-content">
+                        <p>I’m a 3rd-year Computer Science and Engineering student at NIST University, Berhampur. I’m deeply passionate about Data Science, Game Development, and Machine Learning, with a strong interest in building impactful software projects. I also enjoy working on Android app development and web technologies, blending creativity with technical skills.</p>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="projects">
-            <div class="projects-wrapper">
-                <div class="projects-sticky-container">
-                    <h2 class="section-title">Engineering Showcase</h2>
-                    <div class="projects-grid">
-                        <div class="project-card interactive">
-                            <h3>Task Manager Pro</h3>
-                            <p>An Android Studio app with task CRUD, reminders, notifications, fluid animations, and data persistence using the Room database.</p>
+            <section id="skills">
+                <div class="container">
+                    <h2 class="section-title">Technical Arsenal</h2>
+                    <div class="skills-grid">
+                        <div class="skill-card">
+                            <h3>Programming & Algorithms</h3>
+                            <ul>
+                                <li>C Programming & Python</li>
+                                <li>Sorting (Quick, Merge, Heap)</li>
+                                <li>Dynamic Programming (LCS, Knapsack)</li>
+                                <li>Graph Traversal (BFS, DFS)</li>
+                            </ul>
                         </div>
-                        <div class="project-card interactive">
-                            <h3>Feedback System</h3>
-                            <p>An Android project with Firebase Realtime Database integration, featuring distinct student-teacher interfaces, smooth animations, and a polished UI.</p>
+                        <div class="skill-card">
+                            <h3>Tools & Technologies</h3>
+                            <ul>
+                                <li>Unreal Engine 5 & Android Studio</li>
+                                <li>Firebase & Room Database</li>
+                                <li>Figma & Canva</li>
+                                <li>VS Code & Git</li>
+                            </ul>
                         </div>
-                        <div class="project-card interactive">
-                            <h3>Intelligent Query Retrieval System</h3>
-                            <p>A hackathon project utilizing LLMs to process natural language queries on unstructured documents, enabling semantic search and information extraction.</p>
-                        </div>
-                         <div class="project-card interactive">
-                            <h3>Personal Experiments</h3>
-                            <p>Ongoing personal projects where I explore new algorithms, experiment with game engine features, and build small tools for fun and learning.</p>
+                        <div class="skill-card">
+                            <h3>Soft Skills</h3>
+                            <ul>
+                                <li>Teamwork & Collaboration</li>
+                                <li>Active Listening & Empathy</li>
+                                <li>Creative Problem-Solving</li>
+                                <li>Adaptability & Fast Learner</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+
+            <section id="projects">
+                <div class="projects-wrapper">
+                    <div class="projects-sticky-container">
+                        <h2 class="section-title">Engineering Showcase</h2>
+                        <div class="projects-grid">
+                            <div class="project-card interactive">
+                                <h3>Task Manager Pro</h3>
+                                <p>An Android Studio app with task CRUD, reminders, notifications, fluid animations, and data persistence using the Room database.</p>
+                            </div>
+                            <div class="project-card interactive">
+                                <h3>Feedback System</h3>
+                                <p>An Android project with Firebase Realtime Database integration, featuring distinct student-teacher interfaces, smooth animations, and a polished UI.</p>
+                            </div>
+                            <div class="project-card interactive">
+                                <h3>Intelligent Query Retrieval System</h3>
+                                <p>A hackathon project utilizing LLMs to process natural language queries on unstructured documents, enabling semantic search and information extraction.</p>
+                            </div>
+                             <div class="project-card interactive">
+                                <h3>Personal Experiments</h3>
+                                <p>Ongoing personal projects where I explore new algorithms, experiment with game engine features, and build small tools for fun and learning.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="more-about-me">
+                <div class="container">
+                    <h2 class="section-title">Career Blueprint</h2>
+                    <div class="strengths-goals-grid">
+                        <div class="card">
+                            <h3>My Goals</h3>
+                            <p><strong>Short-Term:</strong> To secure a placement in a good MNC where I can sharpen my technical and collaborative skills.</p>
+                            <p><strong>Long-Term:</strong> To build my own startup, creating impactful solutions in the tech and gaming industries.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Strengths & Weakness</h3>
+                            <p><strong>Strengths:</strong> Active listener, creative thinker, and a strong problem-solving mindset.</p>
+                            <p><strong>Weakness:</strong> Stage fear, which I’m actively working to overcome through continuous practice.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact">
+                <div class="container contact-content">
+                    <h2 class="section-title">Initiate Contact</h2>
+                    <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of an amazing team. Let's build something incredible together.</p>
+                    <div class="contact-links">
+                        <a href="mailto:[Your Email Here]" class="btn btn-primary interactive">Email Me</a>
+                        <a href="[Your LinkedIn Link Here]" target="_blank" class="btn btn-secondary interactive">LinkedIn</a>
+                        <a href="[Your GitHub Link Here]" target="_blank" class="btn btn-secondary interactive">GitHub</a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ask-question">
+                <div class="container ask-question-content">
+                    <h2 class="section-title">Have a Question?</h2>
+                    <p>Feel free to ask me anything about my projects, skills, or potential collaborations. I'll get back to you as soon as possible.</p>
+                    <form class="question-form">
+                        <textarea class="question-input interactive" placeholder="Type your question here..." rows="4"></textarea>
+                        <button type="submit" class="btn btn-primary interactive">Submit Question</button>
+                    </form>
+                </div>
+            </section>
+        </main>
         
-        <section id="more-about-me">
-            <div class="container">
-                <h2 class="section-title">Career Blueprint</h2>
-                <div class="strengths-goals-grid">
-                    <div class="card">
-                        <h3>My Goals</h3>
-                        <p><strong>Short-Term:</strong> To secure a placement in a good MNC where I can sharpen my technical and collaborative skills.</p>
-                        <p><strong>Long-Term:</strong> To build my own startup, creating impactful solutions in the tech and gaming industries.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Strengths & Weakness</h3>
-                        <p><strong>Strengths:</strong> Active listener, creative thinker, and a strong problem-solving mindset.</p>
-                        <p><strong>Weakness:</strong> Stage fear, which I’m actively working to overcome through continuous practice.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact">
-            <div class="container contact-content">
-                <h2 class="section-title">Initiate Contact</h2>
-                <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of an amazing team. Let's build something incredible together.</p>
-                <div class="contact-links">
-                    <a href="mailto:[Your Email Here]" class="btn btn-primary interactive">Email Me</a>
-                    <a href="[Your LinkedIn Link Here]" target="_blank" class="btn btn-secondary interactive">LinkedIn</a>
-                    <a href="[Your GitHub Link Here]" target="_blank" class="btn btn-secondary interactive">GitHub</a>
-                </div>
-            </div>
-        </section>
-
-        <section id="ask-question">
-            <div class="container ask-question-content">
-                <h2 class="section-title">Have a Question?</h2>
-                <p>Feel free to ask me anything about my projects, skills, or potential collaborations. I'll get back to you as soon as possible.</p>
-                <form class="question-form">
-                    <textarea class="question-input interactive" placeholder="Type your question here..." rows="4"></textarea>
-                    <button type="submit" class="btn btn-primary interactive">Submit Question</button>
-                </form>
-            </div>
-        </section>
-    </main>
+        <footer>
+            <p>&copy; 2025 G Sekhar Reddy. Engineered with Three.js & GSAP.</p>
+        </footer>
+    </div>
 
     <div class="controls-container" id="controls-container">
         <div class="controls-toggle interactive">
@@ -589,10 +602,6 @@
             </div>
         </div>
     </div>
-    
-    <footer>
-        <p>&copy; 2025 G Sekhar Reddy. Engineered with Three.js & GSAP.</p>
-    </footer>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
@@ -736,7 +745,7 @@
                 ease: 'power4.out',
             }, "-=0.2");
             
-            const sections = gsap.utils.toArray('section');
+            const sections = gsap.utils.toArray('main > section');
             sections.forEach(section => {
                 const title = section.querySelector('.section-title');
                 const content = section.querySelectorAll('.about-content p, .skill-card, .project-card, .card, .contact-content, .ask-question-content');
@@ -747,7 +756,7 @@
                         opacity: 0, y: 50, duration: 1
                     });
                 }
-                if (content.length > 0) {
+                if (content.length > 0 && section.id !== 'projects') { // Exclude projects from this generic animation
                      gsap.from(content, {
                         scrollTrigger: { trigger: section, start: 'top 70%' },
                         opacity: 0, y: 50, duration: 1, stagger: 0.1
@@ -758,13 +767,18 @@
             if (window.innerWidth > 768) {
                 const projectsGrid = document.querySelector('.projects-grid');
                 const projectsWrapper = document.querySelector('.projects-wrapper');
+                const stickyContainer = document.querySelector('.projects-sticky-container');
+
+                // Set the height of the wrapper based on the scrollable width of the grid
+                gsap.set(projectsWrapper, { height: () => projectsGrid.scrollWidth - window.innerWidth + window.innerHeight });
+
                 gsap.to(projectsGrid, {
                     x: () => -(projectsGrid.scrollWidth - document.documentElement.clientWidth) + "px",
                     ease: "none",
                     scrollTrigger: {
-                        trigger: projectsWrapper,
+                        trigger: stickyContainer,
                         start: "top top",
-                        end: () => "+=" + (projectsGrid.scrollWidth - document.documentElement.clientWidth),
+                        end: () => "+=" + (projectsGrid.scrollWidth - window.innerWidth),
                         scrub: true, // Smoother scrubbing
                         pin: true,
                         invalidateOnRefresh: true,
