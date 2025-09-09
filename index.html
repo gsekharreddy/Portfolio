@@ -15,7 +15,7 @@
             --bg-dark: #0A0A14;
             --primary-color: #FFA500;
             --secondary-color: #1E90FF;
-            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-bg: rgba(15, 15, 25, 0.5);
             --text-light: #E0E0E0;
             --border-color: rgba(255, 255, 255, 0.1);
             --font-main: 'Poppins', sans-serif;
@@ -39,6 +39,15 @@
             cursor: none;
         }
 
+        #page-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
         .container {
             max-width: 1200px;
             width: 90%;
@@ -48,6 +57,7 @@
         section {
             padding: 7rem 0;
             position: relative;
+            background-color: transparent;
         }
 
         .section-title {
@@ -131,7 +141,7 @@
         }
 
         .main-header.scrolled {
-            background-color: rgba(10, 10, 20, 0.5);
+            background-color: rgba(10, 10, 20, 0.7);
             backdrop-filter: blur(15px);
         }
 
@@ -153,7 +163,7 @@
         .nav-links a { text-decoration: none; color: var(--text-light); font-weight: 500; }
 
         /*------------------------------------
-          5. HERO SECTION & THREE.JS CANVAS
+          5. HERO SECTION
         ------------------------------------*/
         .hero {
             height: 100vh;
@@ -162,15 +172,6 @@
             justify-content: center;
             text-align: center;
             position: relative;
-        }
-
-        #hero-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
         }
 
         .hero-content h1 {
@@ -195,6 +196,7 @@
             font-weight: 500;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             margin-top: 2rem;
+            border: none;
         }
 
         .btn:hover {
@@ -206,7 +208,7 @@
         .btn-secondary { background-color: var(--secondary-color); }
         
         /*------------------------------------
-          6. ABOUT & SKILLS SECTIONS
+          6. CONTENT CARDS & SECTIONS
         ------------------------------------*/
         .about-content p {
             max-width: 800px;
@@ -214,6 +216,11 @@
             text-align: center;
             font-size: 1.1rem;
             line-height: 1.8;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
         
         .skills-grid {
@@ -223,12 +230,13 @@
             margin-top: 4rem;
         }
         
-        .skill-card {
+        .skill-card, .card {
             background: var(--glass-bg);
             border: 1px solid var(--border-color);
             padding: 2rem;
             border-radius: 15px;
             text-align: center;
+            backdrop-filter: blur(10px);
         }
         .skill-card h3 { font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 1.5rem; }
         .skill-card ul { list-style: none; }
@@ -263,6 +271,7 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
         }
         
         .project-card h3 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--primary-color); }
@@ -276,17 +285,18 @@
             grid-template-columns: 1fr 1fr;
             gap: 3rem;
         }
-        .card { background: var(--glass-bg); padding: 2rem; border-radius: 15px; border: 1px solid var(--border-color); }
         .card h3 { font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 1rem; }
         
-        .contact-content { text-align: center; max-width: 700px; margin: 0 auto; }
+        .contact-content, .ask-question-content { 
+            text-align: center; max-width: 700px; margin: 0 auto; 
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            padding: 3rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
         .contact-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 2rem; }
         
-        .ask-question-content {
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto;
-        }
         .question-form {
             margin-top: 2rem;
             display: flex;
@@ -296,7 +306,7 @@
         .question-input {
             width: 100%;
             padding: 1rem;
-            background: var(--glass-bg);
+            background: rgba(0,0,0,0.2);
             border: 1px solid var(--border-color);
             border-radius: 10px;
             color: var(--text-light);
@@ -317,12 +327,81 @@
         }
 
         /*------------------------------------
-          9. FOOTER
+          9. CONTROLS PANEL
         ------------------------------------*/
-        footer { text-align: center; padding: 3rem 0; border-top: 1px solid var(--border-color); }
+        .controls-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1001;
+        }
+        .controls-toggle {
+            width: 50px;
+            height: 50px;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            cursor: none;
+        }
+        .controls-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-light);
+            transition: transform 0.5s ease;
+        }
+        .controls-panel {
+            position: absolute;
+            bottom: 65px;
+            right: 0;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            width: 250px;
+            backdrop-filter: blur(10px);
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        .controls-container.open .controls-toggle svg {
+            transform: rotate(90deg);
+        }
+        .controls-container.open .controls-panel {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .control-group {
+            margin-bottom: 1rem;
+        }
+        .control-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .control-group input[type="range"] {
+            width: 100%;
+        }
+        .control-group input[type="color"] {
+            width: 100%;
+            height: 40px;
+            border: none;
+            padding: 0;
+            background: transparent;
+        }
+
+        /*------------------------------------
+          10. FOOTER
+        ------------------------------------*/
+        footer { text-align: center; padding: 3rem 0; }
         
         /*------------------------------------
-          10. RESPONSIVENESS
+          11. RESPONSIVENESS
         ------------------------------------*/
         @media(max-width: 768px) {
             .nav-links { display: none; }
@@ -335,6 +414,8 @@
     </style>
 </head>
 <body style="visibility: hidden;"> <!-- Hide body until preloader is done -->
+    
+    <canvas id="page-canvas"></canvas>
 
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
@@ -361,7 +442,6 @@
 
     <main>
         <section id="hero" class="hero">
-            <canvas id="hero-canvas"></canvas>
             <div class="hero-content container">
                 <h1>
                     <span class="line">G Sekhar Reddy</span>
@@ -482,6 +562,26 @@
             </div>
         </section>
     </main>
+
+    <div class="controls-container" id="controls-container">
+        <div class="controls-toggle interactive">
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-3.2 8.7-11.4 14.6-20.8 14.6h-50.5c-7.8 0-15.2-4.2-19.1-11.1l-19.9-34.5c-7.7-1.4-15.2-3.4-22.5-5.9l-29.7 47.4c-4.9 7.8-13.5 12.5-22.7 12.5H256c-9.2 0-17.8-4.7-22.7-12.5l-29.7-47.4c-7.3 2.5-14.8 4.5-22.5 5.9l-19.9 34.5c-3.9 6.9-11.3 11.1-19.1 11.1H87c-9.4 0-17.6-5.9-20.8-14.6c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C114.6 273.1 114 264.6 114 256s.6-17.1 1.7-25.4L72.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c3.2-8.7 11.4-14.6 20.8-14.6h50.5c7.8 0 15.2 4.2 19.1 11.1l19.9 34.5c7.7 1.4 15.2 3.4 22.5 5.9l29.7-47.4c4.9-7.8 13.5-12.5 22.7-12.5H256c9.2 0 17.8 4.7 22.7 12.5l29.7 47.4c7.3-2.5 14.8-4.5 22.5-5.9l19.9-34.5c3.9-6.9 11.3-11.1 19.1-11.1h50.5c9.4 0 17.6 5.9 20.8 14.6zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"/></svg>
+        </div>
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="particleColor">Particle Color</label>
+                <input type="color" id="particleColor" value="#1E90FF">
+            </div>
+            <div class="control-group">
+                <label for="particleSize">Particle Size</label>
+                <input type="range" id="particleSize" min="0.1" max="1" step="0.1" value="0.2">
+            </div>
+             <div class="control-group">
+                <label for="particleSpeed">Animation Speed</label>
+                <input type="range" id="particleSpeed" min="0" max="0.002" step="0.0001" value="0.0005">
+            </div>
+        </div>
+    </div>
     
     <footer>
         <p>&copy; 2025 G Sekhar Reddy. Engineered with Three.js & GSAP.</p>
@@ -537,7 +637,7 @@
             document.querySelectorAll('.interactive').forEach(el => {
                 el.addEventListener('mouseenter', () => {
                     cursorOutline.classList.add('hover');
-                    gsap.to(el, { scale: 1.1, duration: 0.3 });
+                    gsap.to(el, { scale: 1.05, duration: 0.3 });
                 });
                 el.addEventListener('mouseleave', () => {
                     cursorOutline.classList.remove('hover');
@@ -558,13 +658,14 @@
             // --- 3. THREE.JS HERO BACKGROUND ---
             let scene, camera, renderer, particles;
             const mouse = new THREE.Vector2();
+            let particleSpeed = 0.0005;
 
             function initThreeJS() {
                 scene = new THREE.Scene();
                 camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
                 camera.position.z = 50;
 
-                renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), alpha: true });
+                renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('page-canvas'), alpha: true });
                 renderer.setSize(window.innerWidth, window.innerHeight);
 
                 const particleCount = 500;
@@ -587,8 +688,7 @@
                     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
                     mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
                 });
-
-                // Click to explode particles
+                
                 window.addEventListener('click', () => {
                     gsap.to(particles.scale, {
                         duration: 0.5,
@@ -609,8 +709,8 @@
 
             function animate() {
                 requestAnimationFrame(animate);
-                particles.rotation.x += 0.0005;
-                particles.rotation.y += 0.0005;
+                particles.rotation.x += particleSpeed;
+                particles.rotation.y += particleSpeed;
                 
                 camera.position.x += (mouse.x * 5 - camera.position.x) * 0.02;
                 camera.position.y += (mouse.y * 5 - camera.position.y) * 0.02;
@@ -627,11 +727,11 @@
                 duration: 1,
                 ease: 'power4.out',
             }, "-=0.2");
-            // General section animations
+            
             const sections = gsap.utils.toArray('section');
             sections.forEach(section => {
                 const title = section.querySelector('.section-title');
-                const content = section.querySelectorAll('.about-content p, .skill-card, .project-card, .card, .contact-content > *, .ask-question-content > *');
+                const content = section.querySelectorAll('.about-content p, .skill-card, .project-card, .card, .contact-content, .ask-question-content');
                 
                 if (title) {
                     gsap.from(title, {
@@ -664,9 +764,26 @@
                     }
                 });
             }
+
+            // --- 5. CONTROLS PANEL LOGIC ---
+            const controlsContainer = document.getElementById('controls-container');
+            const toggleButton = controlsContainer.querySelector('.controls-toggle');
+            
+            toggleButton.addEventListener('click', () => {
+                controlsContainer.classList.toggle('open');
+            });
+
+            document.getElementById('particleColor').addEventListener('input', (e) => {
+                particles.material.color.set(e.target.value);
+            });
+            document.getElementById('particleSize').addEventListener('input', (e) => {
+                particles.material.size = parseFloat(e.target.value);
+            });
+            document.getElementById('particleSpeed').addEventListener('input', (e) => {
+                particleSpeed = parseFloat(e.target.value);
+            });
         });
     </script>
 </body>
 </html>
-
 
