@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyper-Interactive Portfolio | Your Name</title>
-    
+    <title>G Sekhar Reddy | Interactive Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /*------------------------------------
           1. CONFIG: VARIABLES & GLOBAL RESET
         ------------------------------------*/
         :root {
-            --bg-dark: #0d0d1a;
-            --bg-light: #F7F8FC;
+            --bg-dark: #0A0A14;
             --primary-color: #FFA500;
             --secondary-color: #1E90FF;
             --glass-bg: rgba(255, 255, 255, 0.05);
-            --text-light: #e0e0e0;
-            --text-dark: #333;
+            --text-light: #E0E0E0;
             --border-color: rgba(255, 255, 255, 0.1);
             --font-main: 'Poppins', sans-serif;
         }
@@ -36,7 +36,7 @@
             background-color: var(--bg-dark);
             color: var(--text-light);
             overflow-x: hidden;
-            cursor: none; /* Hide default cursor */
+            cursor: none;
         }
 
         .container {
@@ -55,19 +55,36 @@
             text-align: center;
             margin-bottom: 4rem;
             font-weight: 700;
-            color: var(--text-light);
-            transform: translateY(50px);
-            opacity: 0;
-            transition: transform 0.8s ease, opacity 0.8s ease;
-        }
-        
-        .section-title.visible {
-            transform: translateY(0);
-            opacity: 1;
         }
         
         /*------------------------------------
-          2. CUSTOM CURSOR
+          2. PRELOADER
+        ------------------------------------*/
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--bg-dark);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .preloader-text {
+            display: flex;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+        .preloader-text span {
+            display: block;
+        }
+
+        /*------------------------------------
+          3. CUSTOM CURSOR
         ------------------------------------*/
         .cursor-dot, .cursor-outline {
             position: fixed;
@@ -83,7 +100,6 @@
             width: 8px;
             height: 8px;
             background-color: var(--primary-color);
-            transition: transform 0.1s ease-out;
         }
 
         .cursor-outline {
@@ -100,7 +116,7 @@
         }
 
         /*------------------------------------
-          3. HEADER & NAVBAR
+          4. HEADER & NAVBAR
         ------------------------------------*/
         .main-header {
             position: fixed;
@@ -109,11 +125,13 @@
             width: 100%;
             z-index: 1000;
             padding: 1.5rem 0;
+            background-color: rgba(10, 10, 20, 0.3);
+            backdrop-filter: blur(10px);
             transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
         }
 
         .main-header.scrolled {
-            background-color: rgba(13, 13, 26, 0.5);
+            background-color: rgba(10, 10, 20, 0.5);
             backdrop-filter: blur(15px);
         }
 
@@ -127,24 +145,15 @@
             font-size: 1.8rem;
             font-weight: 700;
             text-decoration: none;
-            color: var(--primary-color);
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
             color: var(--text-light);
-            font-weight: 500;
-            transition: color 0.3s ease;
         }
+        .nav-logo span { color: var(--primary-color); }
+
+        .nav-links { display: flex; list-style: none; gap: 2.5rem; }
+        .nav-links a { text-decoration: none; color: var(--text-light); font-weight: 500; }
 
         /*------------------------------------
-          4. HERO SECTION & THREE.JS CANVAS
+          5. HERO SECTION & THREE.JS CANVAS
         ------------------------------------*/
         .hero {
             height: 100vh;
@@ -165,71 +174,84 @@
         }
 
         .hero-content h1 {
-            font-size: clamp(3rem, 10vw, 6rem);
+            font-size: clamp(2.5rem, 8vw, 5rem);
             font-weight: 700;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: slide-in 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        .line { display: block; }
+        .hero-content p {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            color: var(--secondary-color);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2.2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 2rem;
         }
 
-        @keyframes slide-in {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
         }
 
+        .btn-primary { background-color: var(--primary-color); }
+        .btn-secondary { background-color: var(--secondary-color); }
+        
         /*------------------------------------
-          5. ABOUT SECTION
+          6. ABOUT & SKILLS SECTIONS
         ------------------------------------*/
-        #about { background-color: var(--bg-light); color: var(--text-dark); }
-        #about .section-title { color: var(--text-dark); }
-
-        .about-content {
+        .about-content p {
             max-width: 800px;
             margin: 0 auto;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             line-height: 1.8;
         }
         
-        .about-content p {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
         }
         
-        .about-content p.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .skill-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
         }
+        .skill-card h3 { font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 1.5rem; }
+        .skill-card ul { list-style: none; }
+        .skill-card li { margin-bottom: 0.8rem; }
         
         /*------------------------------------
-          6. PROJECTS (HORIZONTAL SCROLL)
+          7. PROJECTS (HORIZONTAL SCROLL)
         ------------------------------------*/
-        .projects-wrapper {
-            height: 100vh;
-            position: relative;
-        }
-        
-        .projects-sticky-container {
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
+        #projects { padding: 0; }
+        .projects-wrapper { height: 300vh; position: relative; }
+        .projects-sticky-container { position: sticky; top: 0; height: 100vh; overflow: hidden; }
         .projects-grid {
             height: 100%;
             display: flex;
             align-items: center;
             gap: 4rem;
             padding: 0 5vw;
-            width: max-content; /* Critical for horizontal scroll */
+            width: max-content;
         }
 
         .project-card {
-            width: 400px;
-            height: 550px;
+            width: 450px;
+            height: 580px;
             flex-shrink: 0;
             background: var(--glass-bg);
             border-radius: 20px;
@@ -241,327 +263,410 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            transition: transform 0.5s ease;
         }
         
-        .project-card:hover {
-            transform: translateY(-15px);
-        }
-
-        .project-card .bg-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-            filter: grayscale(80%) brightness(0.5);
-            transition: filter 0.5s ease, transform 0.5s ease;
-        }
-        
-        .project-card:hover .bg-image {
-            filter: grayscale(0%) brightness(0.8);
-            transform: scale(1.1);
-        }
-        
-        .project-card h3 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-light);
-        }
-        
-        .project-card p {
-            line-height: 1.6;
-        }
-
-        /*------------------------------------
-          7. PROJECT MODAL
-        ------------------------------------*/
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .modal-content {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            padding: 3rem;
-            border-radius: 10px;
-            max-width: 800px;
-            width: 90%;
-            position: relative;
-            transform: scale(0.8);
-            transition: transform 0.5s ease;
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
-        
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1.5rem;
-            font-size: 2rem;
-            background: none;
-            border: none;
-            color: var(--text-light);
-            cursor: none;
-        }
+        .project-card h3 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--primary-color); }
+        .project-card p { line-height: 1.6; }
         
         /*------------------------------------
-          8. FOOTER
+          8. GOALS & CONTACT
         ------------------------------------*/
-        footer {
+        .strengths-goals-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+        .card { background: var(--glass-bg); padding: 2rem; border-radius: 15px; border: 1px solid var(--border-color); }
+        .card h3 { font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 1rem; }
+        
+        .contact-content { text-align: center; max-width: 700px; margin: 0 auto; }
+        .contact-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 2rem; }
+        
+        .ask-question-content {
             text-align: center;
-            padding: 3rem 0;
-            background-color: var(--bg-dark);
-            border-top: 1px solid var(--border-color);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .question-form {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .question-input {
+            width: 100%;
+            padding: 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-family: var(--font-main);
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+        .question-input::placeholder {
+            color: rgba(224, 224, 224, 0.5);
+        }
+        .question-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .question-form .btn {
+            align-self: center;
         }
 
         /*------------------------------------
-          9. RESPONSIVENESS
+          9. FOOTER
+        ------------------------------------*/
+        footer { text-align: center; padding: 3rem 0; border-top: 1px solid var(--border-color); }
+        
+        /*------------------------------------
+          10. RESPONSIVENESS
         ------------------------------------*/
         @media(max-width: 768px) {
             .nav-links { display: none; }
             .projects-wrapper { height: auto; }
-            .projects-sticky-container { position: static; height: auto; overflow: visible; }
+            .projects-sticky-container { position: static; height: auto; overflow: visible; padding: 7rem 0; }
             .projects-grid { flex-direction: column; width: 100%; padding: 0; }
-            .project-card { width: 100%; height: 500px; }
+            .project-card { width: 100%; height: auto; min-height: 500px; }
+            .strengths-goals-grid { grid-template-columns: 1fr; }
         }
-
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body style="visibility: hidden;"> <!-- Hide body until preloader is done -->
 
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
+    
+    <div class="preloader">
+        <div class="preloader-text">
+            <span>G</span>
+            <span>S</span>
+            <span>R</span>
+        </div>
+    </div>
 
     <header class="main-header" id="main-header">
         <nav class="navbar container">
-            <a href="#" class="nav-logo interactive">[Your Name]</a>
+            <a href="#hero" class="nav-logo interactive">G Sekhar <span>Reddy</span></a>
             <ul class="nav-links">
-                <li><a href="#hero" class="interactive">Home</a></li>
                 <li><a href="#about" class="interactive">About</a></li>
+                <li><a href="#skills" class="interactive">Skills</a></li>
                 <li><a href="#projects" class="interactive">Projects</a></li>
+                <li><a href="#contact" class="interactive">Contact</a></li>
             </ul>
         </nav>
     </header>
 
-    <section id="hero" class="hero">
-        <canvas id="hero-canvas"></canvas>
-        <div class="hero-content container">
-            <h1>INSANELY COMPLEX</h1>
-        </div>
-    </section>
-
-    <section id="about">
-        <div class="container">
-            <h2 class="section-title">A Fusion of Code & Creativity.</h2>
-            <div class="about-content">
-                <p>This is not just a portfolio; it's a statement. Built from the ground up with a suite of advanced web technologies to create a truly immersive and memorable user experience. Every interaction, every animation is meticulously crafted to push the boundaries of what a single HTML file can do.</p>
+    <main>
+        <section id="hero" class="hero">
+            <canvas id="hero-canvas"></canvas>
+            <div class="hero-content container">
+                <h1>
+                    <span class="line">G Sekhar Reddy</span>
+                </h1>
+                <p>Computer Science Student | Engineer | Game Developer</p>
+                <a href="#projects" class="btn btn-primary interactive">Explore My Work</a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="projects" class="projects">
-        <div class="projects-wrapper">
-            <div class="projects-sticky-container">
-                <h2 class="section-title">Featured Work</h2>
-                <div class="projects-grid">
-                    <div class="project-card interactive" data-project-id="1">
-                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop" class="bg-image" alt="Code">
-                        <h3>Project One</h3>
-                        <p>A deep dive into advanced front-end development.</p>
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title">About Me</h2>
+                <div class="about-content">
+                    <p>I’m a 3rd-year Computer Science and Engineering student at NIST University, Berhampur. I’m deeply passionate about Data Science, Game Development, and Machine Learning, with a strong interest in building impactful software projects. I also enjoy working on Android app development and web technologies, blending creativity with technical skills.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <div class="container">
+                <h2 class="section-title">Technical Arsenal</h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <h3>Programming & Algorithms</h3>
+                        <ul>
+                            <li>C Programming & Python</li>
+                            <li>Sorting (Quick, Merge, Heap)</li>
+                            <li>Dynamic Programming (LCS, Knapsack)</li>
+                            <li>Graph Traversal (BFS, DFS)</li>
+                        </ul>
                     </div>
-                    <div class="project-card interactive" data-project-id="2">
-                        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop" class="bg-image" alt="Laptop">
-                        <h3>Project Two</h3>
-                        <p>Full-stack application with a focus on performance.</p>
+                    <div class="skill-card">
+                        <h3>Tools & Technologies</h3>
+                        <ul>
+                            <li>Unreal Engine 5 & Android Studio</li>
+                            <li>Firebase & Room Database</li>
+                            <li>Figma & Canva</li>
+                            <li>VS Code & Git</li>
+                        </ul>
                     </div>
-                    <div class="project-card interactive" data-project-id="3">
-                        <img src="https://images.unsplash.com/photo-1618788372246-79faff0c3742?q=80&w=1964&auto=format&fit=crop" class="bg-image" alt="UI Design">
-                        <h3>Project Three</h3>
-                        <p>UI/UX design and implementation with modern frameworks.</p>
-                    </div>
-                    <div class="project-card interactive" data-project-id="4">
-                        <img src="https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=2106&auto=format&fit=crop" class="bg-image" alt="Data">
-                        <h3>Project Four</h3>
-                        <p>Data visualization and interactive dashboards.</p>
+                    <div class="skill-card">
+                        <h3>Soft Skills</h3>
+                        <ul>
+                            <li>Teamwork & Collaboration</li>
+                            <li>Active Listening & Empathy</li>
+                            <li>Creative Problem-Solving</li>
+                            <li>Adaptability & Fast Learner</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
+        <section id="projects">
+            <div class="projects-wrapper">
+                <div class="projects-sticky-container">
+                    <h2 class="section-title">Engineering Showcase</h2>
+                    <div class="projects-grid">
+                        <div class="project-card interactive">
+                            <h3>Task Manager Pro</h3>
+                            <p>An Android Studio app with task CRUD, reminders, notifications, fluid animations, and data persistence using the Room database.</p>
+                        </div>
+                        <div class="project-card interactive">
+                            <h3>Feedback System</h3>
+                            <p>An Android project with Firebase Realtime Database integration, featuring distinct student-teacher interfaces, smooth animations, and a polished UI.</p>
+                        </div>
+                        <div class="project-card interactive">
+                            <h3>Intelligent Query Retrieval System</h3>
+                            <p>A hackathon project utilizing LLMs to process natural language queries on unstructured documents, enabling semantic search and information extraction.</p>
+                        </div>
+                         <div class="project-card interactive">
+                            <h3>Personal Experiments</h3>
+                            <p>Ongoing personal projects where I explore new algorithms, experiment with game engine features, and build small tools for fun and learning.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="more-about-me">
+            <div class="container">
+                <h2 class="section-title">Career Blueprint</h2>
+                <div class="strengths-goals-grid">
+                    <div class="card">
+                        <h3>My Goals</h3>
+                        <p><strong>Short-Term:</strong> To secure a placement in a good MNC where I can sharpen my technical and collaborative skills.</p>
+                        <p><strong>Long-Term:</strong> To build my own startup, creating impactful solutions in the tech and gaming industries.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Strengths & Weakness</h3>
+                        <p><strong>Strengths:</strong> Active listener, creative thinker, and a strong problem-solving mindset.</p>
+                        <p><strong>Weakness:</strong> Stage fear, which I’m actively working to overcome through continuous practice.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="container contact-content">
+                <h2 class="section-title">Initiate Contact</h2>
+                <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of an amazing team. Let's build something incredible together.</p>
+                <div class="contact-links">
+                    <a href="mailto:[Your Email Here]" class="btn btn-primary interactive">Email Me</a>
+                    <a href="[Your LinkedIn Link Here]" target="_blank" class="btn btn-secondary interactive">LinkedIn</a>
+                    <a href="[Your GitHub Link Here]" target="_blank" class="btn btn-secondary interactive">GitHub</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="ask-question">
+            <div class="container ask-question-content">
+                <h2 class="section-title">Have a Question?</h2>
+                <p>Feel free to ask me anything about my projects, skills, or potential collaborations. I'll get back to you as soon as possible.</p>
+                <form class="question-form">
+                    <textarea class="question-input interactive" placeholder="Type your question here..." rows="4"></textarea>
+                    <button type="submit" class="btn btn-primary interactive">Submit Question</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    
     <footer>
-        <div class="container">
-            <p>&copy; 2025 [Your Name]. This is an experimental design.</p>
-        </div>
+        <p>&copy; 2025 G Sekhar Reddy. Engineered with Three.js & GSAP.</p>
     </footer>
-
-    <div class="modal-overlay" id="project-modal">
-        <div class="modal-content">
-            <button class="modal-close interactive">&times;</button>
-            <h2 id="modal-title">Project Title</h2>
-            <p id="modal-description">Detailed project description goes here...</p>
-        </div>
-    </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script defer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // --- 0. PRELOADER ANIMATION ---
+            const preloader = document.querySelector('.preloader');
+            const preloaderText = document.querySelectorAll('.preloader-text span');
+            const body = document.querySelector('body');
+            
+            const tl = gsap.timeline();
+            tl.from(preloaderText, {
+                y: 100,
+                opacity: 0,
+                duration: 1,
+                ease: 'power4.out',
+                stagger: 0.2
+            }).to(preloaderText, {
+                y: -100,
+                opacity: 0,
+                duration: 0.8,
+                ease: 'power4.in',
+                stagger: 0.1,
+                delay: 0.5
+            }).to(preloader, {
+                scaleY: 0,
+                transformOrigin: 'top',
+                duration: 1,
+                ease: 'power4.inOut'
+            }, "-=0.5").to(body, {
+                visibility: 'visible'
+            }, "-=0.8");
 
-            // --- DATA FOR PROJECTS ---
-            const projectData = {
-                1: { title: "Project One", description: "This project explores advanced CSS techniques like Houdini, complex grid layouts, and performance-optimized animations. The goal was to create a visually stunning yet lightweight experience." },
-                2: { title: "Project Two", description: "A full-stack application built with Node.js, Express, and a PostgreSQL database. It features real-time data updates with WebSockets and secure user authentication using JWT." },
-                3: { title: "Project Three", description: "Focused on UI/UX, this project involved creating a design system from scratch in Figma and implementing it with React and Storybook. It emphasizes accessibility and component-based architecture." },
-                4: { title: "Project Four", description: "An interactive dashboard for complex datasets. Using D3.js, it allows users to filter, sort, and explore data through dynamic charts and graphs, providing actionable insights." }
-            };
-
-            // --- 1. CUSTOM CURSOR LOGIC ---
+            // --- 1. CUSTOM CURSOR & MAGNETIC EFFECT ---
             const cursorDot = document.querySelector('.cursor-dot');
             const cursorOutline = document.querySelector('.cursor-outline');
-            const interactiveElements = document.querySelectorAll('.interactive');
-
+            
+            gsap.set(cursorDot, { xPercent: -50, yPercent: -50 });
+            gsap.set(cursorOutline, { xPercent: -50, yPercent: -50 });
+            
             window.addEventListener('mousemove', e => {
-                const { clientX, clientY } = e;
-                cursorDot.style.left = `${clientX}px`;
-                cursorDot.style.top = `${clientY}px`;
-                cursorOutline.style.left = `${clientX}px`;
-                cursorOutline.style.top = `${clientY}px`;
+                gsap.to(cursorDot, { duration: 0.1, x: e.clientX, y: e.clientY });
+                gsap.to(cursorOutline, { duration: 0.4, x: e.clientX, y: e.clientY });
             });
             
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => cursorOutline.classList.add('hover'));
-                el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hover'));
+            document.querySelectorAll('.interactive').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursorOutline.classList.add('hover');
+                    gsap.to(el, { scale: 1.1, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursorOutline.classList.remove('hover');
+                    gsap.to(el, { scale: 1, duration: 0.3 });
+                });
             });
 
             // --- 2. HEADER SCROLL LOGIC ---
             const header = document.getElementById('main-header');
-            window.addEventListener('scroll', () => {
-                header.classList.toggle('scrolled', window.scrollY > 50);
+            ScrollTrigger.create({
+                start: 'top top',
+                end: 99999,
+                onUpdate: self => {
+                    header.classList.toggle('scrolled', self.direction === 1 && self.progress > 0);
+                }
             });
 
             // --- 3. THREE.JS HERO BACKGROUND ---
-            let scene, camera, renderer, stars;
-            const mouse = { x: 0, y: 0 };
+            let scene, camera, renderer, particles;
+            const mouse = new THREE.Vector2();
 
             function initThreeJS() {
                 scene = new THREE.Scene();
-                camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-                camera.position.z = 1;
-                camera.rotation.x = Math.PI / 2;
-                
+                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.z = 50;
+
                 renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), alpha: true });
                 renderer.setSize(window.innerWidth, window.innerHeight);
 
-                const starGeo = new THREE.BufferGeometry();
-                const starVertices = [];
-                for (let i = 0; i < 6000; i++) {
-                    const x = (Math.random() - 0.5) * 2000;
-                    const y = (Math.random() - 0.5) * 2000;
-                    const z = (Math.random() - 0.5) * 2000;
-                    starVertices.push(x, y, z);
+                const particleCount = 500;
+                const positions = new Float32Array(particleCount * 3);
+                for (let i = 0; i < particleCount * 3; i++) {
+                    positions[i] = (Math.random() - 0.5) * 100;
                 }
-                starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-                
-                let starMaterial = new THREE.PointsMaterial({ color: 0xaaaaaa, size: 0.7 });
-                stars = new THREE.Points(starGeo, starMaterial);
-                scene.add(stars);
-                
-                window.addEventListener('mousemove', e => {
-                    mouse.x = e.clientX;
-                    mouse.y = e.clientY;
+                const particlesGeometry = new THREE.BufferGeometry();
+                particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                const particlesMaterial = new THREE.PointsMaterial({
+                    color: 0x1E90FF,
+                    size: 0.2,
+                    transparent: true,
+                    blending: THREE.AdditiveBlending
                 });
-                
+                particles = new THREE.Points(particlesGeometry, particlesMaterial);
+                scene.add(particles);
+
+                window.addEventListener('mousemove', e => {
+                    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                });
+
+                // Click to explode particles
+                window.addEventListener('click', () => {
+                    gsap.to(particles.scale, {
+                        duration: 0.5,
+                        x: 1.5, y: 1.5, z: 1.5,
+                        ease: 'power4.out',
+                        onComplete: () => {
+                            gsap.to(particles.scale, {
+                                duration: 1,
+                                x: 1, y: 1, z: 1,
+                                ease: 'elastic.out(1, 0.3)'
+                            });
+                        }
+                    });
+                });
+
                 animate();
             }
 
             function animate() {
-                stars.position.y += 0.02;
-                stars.rotation.y = -mouse.x * 0.00005;
-                stars.rotation.x = -mouse.y * 0.00005;
-                renderer.render(scene, camera);
                 requestAnimationFrame(animate);
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0005;
+                
+                camera.position.x += (mouse.x * 5 - camera.position.x) * 0.02;
+                camera.position.y += (mouse.y * 5 - camera.position.y) * 0.02;
+                camera.lookAt(scene.position);
+                
+                renderer.render(scene, camera);
             }
             initThreeJS();
             
-            // --- 4. SCROLL-TRIGGERED ANIMATIONS ---
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.2 });
-
-            document.querySelectorAll('.section-title, .about-content p').forEach(el => observer.observe(el));
-
-            // --- 5. HORIZONTAL SCROLL FOR PROJECTS ---
-            const stickyContainer = document.querySelector('.projects-sticky-container');
-            const projectsGrid = document.querySelector('.projects-grid');
-            if (window.innerWidth > 768) { // Only apply on desktop
-                const scrollableWidth = projectsGrid.scrollWidth - window.innerWidth;
-                document.querySelector('.projects-wrapper').style.height = `${scrollableWidth}px`;
+            // --- 4. GSAP SCROLL ANIMATIONS ---
+            tl.from('.hero-content .line', {
+                y: '100%',
+                stagger: 0.1,
+                duration: 1,
+                ease: 'power4.out',
+            }, "-=0.2");
+            // General section animations
+            const sections = gsap.utils.toArray('section');
+            sections.forEach(section => {
+                const title = section.querySelector('.section-title');
+                const content = section.querySelectorAll('.about-content p, .skill-card, .project-card, .card, .contact-content > *, .ask-question-content > *');
                 
-                window.addEventListener('scroll', () => {
-                    const scrollTop = window.scrollY;
-                    const stickyTop = stickyContainer.parentElement.offsetTop;
-                    if (scrollTop > stickyTop && scrollTop < stickyTop + scrollableWidth) {
-                        projectsGrid.style.transform = `translateX(-${scrollTop - stickyTop}px)`;
+                if (title) {
+                    gsap.from(title, {
+                        scrollTrigger: { trigger: title, start: 'top 85%' },
+                        opacity: 0, y: 50, duration: 1
+                    });
+                }
+                if (content.length > 0) {
+                     gsap.from(content, {
+                        scrollTrigger: { trigger: section, start: 'top 70%' },
+                        opacity: 0, y: 50, duration: 1, stagger: 0.1
+                    });
+                }
+            });
+            
+            if (window.innerWidth > 768) {
+                const projectsGrid = document.querySelector('.projects-grid');
+                const projectsWrapper = document.querySelector('.projects-wrapper');
+                gsap.to(projectsGrid, {
+                    x: () => -(projectsGrid.scrollWidth - document.documentElement.clientWidth) + "px",
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: projectsWrapper,
+                        start: "top top",
+                        end: () => "+=" + (projectsGrid.scrollWidth - document.documentElement.clientWidth),
+                        scrub: true,
+                        pin: true,
+                        invalidateOnRefresh: true,
+                        anticipatePin: 1
                     }
                 });
             }
-
-            // --- 6. PROJECT MODAL LOGIC ---
-            const modalOverlay = document.getElementById('project-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalDescription = document.getElementById('modal-description');
-            
-            document.querySelectorAll('.project-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const projectId = card.dataset.projectId;
-                    const data = projectData[projectId];
-                    modalTitle.textContent = data.title;
-                    modalDescription.textContent = data.description;
-                    modalOverlay.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                });
-            });
-
-            function closeModal() {
-                modalOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-            
-            document.querySelector('.modal-close').addEventListener('click', closeModal);
-            modalOverlay.addEventListener('click', (e) => {
-                if (e.target === modalOverlay) closeModal();
-            });
-
         });
     </script>
 </body>
 </html>
+
+
